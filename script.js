@@ -581,9 +581,13 @@ const progressPercent = document.querySelector('#progress-percent');
 const progressCount = document.querySelector('#progress-count');
 const progressCaption = document.querySelector('#progress-caption');
 const levelOptions = document.querySelectorAll('.level-option');
+const levelStorageNote = document.querySelector('#level-storage-note');
+const lessonLevelStorageKey = 'drian-dev-selected-level-v1';
 
-let currentLesson = lessons[0];
-let currentLevel = currentLesson.level;
+let levelStorageAvailable = true;
+let levelStorageMessage = '';
+let currentLevel = readSavedLessonLevel();
+let currentLesson = lessons.find((lesson) => lesson.level === currentLevel) || lessons[0];
 let completedLessons = [];
 let completedQuizzes = [];
 let currentUser = null;
@@ -598,6 +602,40 @@ let dailyStorageMessage = '';
 let projectState;
 let projectStorageAvailable = true;
 let projectStorageMessage = '';
+
+function readSavedLessonLevel() {
+    try {
+        const savedLevel = localStorage.getItem(lessonLevelStorageKey);
+        return lessons.some((lesson) => lesson.level === savedLevel)
+            ? savedLevel
+            : lessons[0].level;
+    } catch (error) {
+        console.error('No se pudo leer el nivel guardado:', error);
+        levelStorageAvailable = false;
+        levelStorageMessage = 'No se pudo recordar tu nivel en este navegador.';
+        return lessons[0].level;
+    }
+}
+
+function updateLevelStorageNote() {
+    levelStorageNote.textContent = levelStorageMessage;
+    levelStorageNote.hidden = !levelStorageMessage;
+}
+
+function saveSelectedLessonLevel() {
+    if (!levelStorageAvailable) {
+        return;
+    }
+
+    try {
+        localStorage.setItem(lessonLevelStorageKey, currentLevel);
+    } catch (error) {
+        console.error('No se pudo guardar el nivel seleccionado:', error);
+        levelStorageAvailable = false;
+        levelStorageMessage = 'No se pudo recordar tu nivel en este navegador.';
+        updateLevelStorageNote();
+    }
+}
 
 function setAuthMessage(message, isError = false) {
     authMessage.textContent = message;
@@ -1358,6 +1396,7 @@ function renderLessonList() {
         button.addEventListener('click', () => {
             currentLesson = lessons.find((lesson) => lesson.id === button.dataset.lesson);
             currentLevel = currentLesson.level;
+            saveSelectedLessonLevel();
             codeEditor.value = currentLesson.editor;
             editorMessage.textContent = '';
             document.querySelector('#lesson-status').textContent = '';
@@ -1376,6 +1415,7 @@ function selectLessonLevel(level) {
     }
 
     currentLevel = level;
+    saveSelectedLessonLevel();
     const levelLessons = lessons.filter((lesson) => lesson.level === currentLevel);
     if (currentLesson.level !== currentLevel) {
         currentLesson = levelLessons[0];
@@ -1457,6 +1497,7 @@ async function loadProgress(user) {
     completedQuizzes = (data?.completed_quizzes || []).filter((id) => lessons.some((lesson) => lesson.id === id));
     currentLesson = lessons.find((lesson) => lesson.id === data?.current_lesson) || lessons[0];
     currentLevel = currentLesson.level;
+    saveSelectedLessonLevel();
     codeEditor.value = data?.editor_code || currentLesson.editor;
     progressLoaded = true;
     renderLessonList();
@@ -1698,6 +1739,7 @@ if ('IntersectionObserver' in window) {
 renderLessonList();
 renderProgress();
 renderLesson();
+updateLevelStorageNote();
 levelOptions.forEach((button) => {
     button.addEventListener('click', () => selectLessonLevel(button.dataset.level));
 });
