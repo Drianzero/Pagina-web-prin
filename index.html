@@ -9,10 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=remember-level">
+    <link rel="stylesheet" href="styles.css?v=welcome-diagnostic">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
-    <script src="script.js?v=remember-level" defer></script>
+    <script src="script.js?v=welcome-diagnostic" defer></script>
 </head>
 <body>
     <div class="scroll-progress" id="scroll-progress" role="progressbar" aria-label="Progreso de lectura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
@@ -264,6 +264,58 @@
         <p>Hecho para aprender. Construido con curiosidad <span aria-label="amor">♥</span></p>
         <a href="#inicio">Volver arriba ↑</a>
     </footer>
+
+    <aside class="welcome-robot is-visible" id="welcome-robot" aria-label="Asistente de bienvenida">
+        <div class="welcome-robot-avatar" aria-hidden="true">
+            <span class="robot-antenna"></span>
+            <span class="robot-eye robot-eye-left"></span>
+            <span class="robot-eye robot-eye-right"></span>
+            <span class="robot-mouth"></span>
+            <span class="robot-wave">✦</span>
+        </div>
+        <div class="welcome-robot-copy">
+            <p role="status">¡Hola! Soy Byte 🤖 ¿Te ayudo a encontrar tu nivel?</p>
+            <button class="welcome-robot-action" id="open-level-quiz" type="button">Descubrir mi nivel <span aria-hidden="true">→</span></button>
+        </div>
+        <button class="welcome-robot-close" id="close-welcome-robot" type="button" aria-label="Cerrar saludo">×</button>
+    </aside>
+
+    <dialog class="level-quiz-dialog" id="level-quiz-dialog" aria-labelledby="level-quiz-title">
+        <div class="level-quiz-content">
+            <button class="dialog-close" id="close-level-quiz" type="button" aria-label="Cerrar diagnóstico">×</button>
+            <p class="eyebrow">UN MINUTO PARA EMPEZAR</p>
+            <h2 id="level-quiz-title">¿Qué nivel va contigo?</h2>
+            <p class="level-quiz-intro">Responde estas tres preguntas y te recomendaremos por dónde comenzar. Tú siempre puedes elegir otro nivel.</p>
+            <form id="level-quiz-form">
+                <fieldset class="level-quiz-question">
+                    <legend>1. ¿Qué experiencia tienes creando páginas web?</legend>
+                    <label><input type="radio" name="experience" value="0" required><span>Ninguna, voy a empezar desde cero.</span></label>
+                    <label><input type="radio" name="experience" value="1"><span>He probado algunos ejemplos o tutoriales.</span></label>
+                    <label><input type="radio" name="experience" value="2"><span>Ya he creado páginas y quiero retos nuevos.</span></label>
+                </fieldset>
+                <fieldset class="level-quiz-question">
+                    <legend>2. ¿Qué tan cómodo te sientes con HTML y CSS?</legend>
+                    <label><input type="radio" name="webBasics" value="0" required><span>Aún no los conozco.</span></label>
+                    <label><input type="radio" name="webBasics" value="1"><span>Reconozco etiquetas y estilos sencillos.</span></label>
+                    <label><input type="radio" name="webBasics" value="2"><span>Puedo estructurar y diseñar una página.</span></label>
+                </fieldset>
+                <fieldset class="level-quiz-question">
+                    <legend>3. ¿Qué has hecho con JavaScript?</legend>
+                    <label><input type="radio" name="javascript" value="0" required><span>Todavía no lo he usado.</span></label>
+                    <label><input type="radio" name="javascript" value="1"><span>He cambiado textos o probado eventos.</span></label>
+                    <label><input type="radio" name="javascript" value="2"><span>Uso funciones, condiciones o listas.</span></label>
+                </fieldset>
+                <button class="button button-bright level-quiz-submit" type="submit">Ver mi recomendación <span aria-hidden="true">→</span></button>
+            </form>
+            <section class="level-quiz-result" id="level-quiz-result" aria-live="polite" hidden>
+                <p class="eyebrow">TU PUNTO DE PARTIDA</p>
+                <h3 id="level-quiz-result-title"></h3>
+                <p id="level-quiz-result-description"></p>
+                <button class="button button-bright" id="apply-level-recommendation" type="button">Elegir este nivel <span aria-hidden="true">✓</span></button>
+                <button class="level-quiz-retry" id="retry-level-quiz" type="button">Responder otra vez</button>
+            </section>
+        </div>
+    </dialog>
 
     <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
         <form class="auth-form" id="auth-form">

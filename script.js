@@ -583,6 +583,10 @@ const progressCaption = document.querySelector('#progress-caption');
 const levelOptions = document.querySelectorAll('.level-option');
 const levelStorageNote = document.querySelector('#level-storage-note');
 const lessonLevelStorageKey = 'drian-dev-selected-level-v1';
+const levelQuizDialog = document.querySelector('#level-quiz-dialog');
+const levelQuizForm = document.querySelector('#level-quiz-form');
+const levelQuizResult = document.querySelector('#level-quiz-result');
+const welcomeRobot = document.querySelector('#welcome-robot');
 
 let levelStorageAvailable = true;
 let levelStorageMessage = '';
@@ -1431,6 +1435,71 @@ function selectLessonLevel(level) {
     saveProgress();
 }
 
+function initializeLevelQuiz() {
+    const levelDetails = {
+        beginner: {
+            title: 'Principiante',
+            description: 'Perfecto para aprender los fundamentos de HTML, CSS y JavaScript paso a paso.'
+        },
+        intermediate: {
+            title: 'Intermedio',
+            description: 'Ya tienes algunas bases. Aquí practicarás diseños, formularios y lógica con nuevos retos.'
+        },
+        advanced: {
+            title: 'Avanzado',
+            description: 'Listo para profundizar en funciones, bucles, arreglos e interacciones con la página.'
+        }
+    };
+    let recommendedLevel = null;
+
+    document.querySelector('#open-level-quiz').addEventListener('click', () => {
+        welcomeRobot.hidden = true;
+        levelQuizDialog.showModal();
+    });
+
+    document.querySelector('#close-level-quiz').addEventListener('click', () => {
+        levelQuizDialog.close();
+    });
+
+    document.querySelector('#retry-level-quiz').addEventListener('click', () => {
+        levelQuizForm.reset();
+        levelQuizForm.hidden = false;
+        levelQuizResult.hidden = true;
+        levelQuizForm.querySelector('input').focus();
+    });
+
+    levelQuizForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const answers = new FormData(levelQuizForm);
+        const score = ['experience', 'webBasics', 'javascript']
+            .reduce((total, question) => total + Number(answers.get(question)), 0);
+        recommendedLevel = score <= 2 ? 'beginner' : score <= 4 ? 'intermediate' : 'advanced';
+
+        document.querySelector('#level-quiz-result-title').textContent = levelDetails[recommendedLevel].title;
+        document.querySelector('#level-quiz-result-description').textContent = levelDetails[recommendedLevel].description;
+        levelQuizForm.hidden = true;
+        levelQuizResult.hidden = false;
+        document.querySelector('#apply-level-recommendation').focus();
+    });
+
+    document.querySelector('#apply-level-recommendation').addEventListener('click', () => {
+        if (!recommendedLevel) {
+            return;
+        }
+
+        selectLessonLevel(recommendedLevel);
+        levelQuizDialog.close();
+        document.querySelector('#ruta').scrollIntoView({ behavior: 'smooth' });
+        document.querySelector(`[data-level="${recommendedLevel}"]`).focus({ preventScroll: true });
+    });
+}
+
+function initializeWelcomeRobot() {
+    document.querySelector('#close-welcome-robot').addEventListener('click', () => {
+        welcomeRobot.hidden = true;
+    });
+}
+
 function runCode() {
     codePreview.srcdoc = codeEditor.value;
     editorMessage.textContent = 'Ejecutado · ¡Sigue experimentando!';
@@ -1743,6 +1812,8 @@ updateLevelStorageNote();
 levelOptions.forEach((button) => {
     button.addEventListener('click', () => selectLessonLevel(button.dataset.level));
 });
+initializeLevelQuiz();
+initializeWelcomeRobot();
 codeEditor.value = currentLesson.editor;
 runCode();
 initializeDailyGame();
