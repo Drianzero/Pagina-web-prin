@@ -9,10 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=guided-project">
+    <link rel="stylesheet" href="styles.css?v=glossary">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
-    <script src="script.js?v=guided-project" defer></script>
+    <script src="script.js?v=glossary" defer></script>
 </head>
 <body>
     <div class="scroll-progress" id="scroll-progress" role="progressbar" aria-label="Progreso de lectura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
@@ -23,6 +23,7 @@
             <a href="#ruta">Mi ruta</a>
             <a href="#reto-diario">Reto diario</a>
             <a href="#proyecto-final">Proyecto final</a>
+            <a href="#glosario">Glosario</a>
             <a href="#laboratorio">Laboratorio</a>
         </nav>
         <button class="account-button" id="account-button" type="button">
@@ -176,6 +177,36 @@
                     <iframe class="project-preview" id="project-preview" title="Vista previa del proyecto final" sandbox="allow-scripts"></iframe>
                 </div>
             </div>
+        </section>
+
+        <section class="glossary-section" id="glosario" aria-labelledby="glossary-title">
+            <div class="section-heading glossary-heading">
+                <div>
+                    <p class="eyebrow">CONSULTA RÁPIDA · CON EJEMPLOS</p>
+                    <h2 id="glossary-title">Tu glosario de programación.</h2>
+                    <p>Busca un concepto o filtra por tema para encontrar justo lo que necesitas.</p>
+                </div>
+                <span class="level-pill" id="glossary-count" aria-live="polite">20 CONCEPTOS</span>
+            </div>
+            <div class="glossary-tools">
+                <div class="glossary-search">
+                    <label for="glossary-search">Buscar en el glosario</label>
+                    <div class="glossary-search-input">
+                        <span aria-hidden="true">⌕</span>
+                        <input id="glossary-search" type="search" placeholder="Ej.: arreglo, color, evento..." autocomplete="off">
+                        <button id="glossary-clear" type="button" aria-label="Borrar búsqueda" hidden>×</button>
+                    </div>
+                </div>
+                <div class="glossary-filters" role="group" aria-label="Filtrar conceptos por tema" id="glossary-filters">
+                    <button class="glossary-filter" type="button" data-category="all" aria-pressed="true">Todos</button>
+                    <button class="glossary-filter" type="button" data-category="HTML" aria-pressed="false">HTML</button>
+                    <button class="glossary-filter" type="button" data-category="CSS" aria-pressed="false">CSS</button>
+                    <button class="glossary-filter" type="button" data-category="JavaScript" aria-pressed="false">JavaScript</button>
+                    <button class="glossary-filter" type="button" data-category="Web" aria-pressed="false">Web</button>
+                </div>
+            </div>
+            <div class="glossary-grid" id="glossary-grid"></div>
+            <p class="glossary-empty" id="glossary-empty" role="status" hidden>No encontramos conceptos con esa búsqueda. Prueba otra palabra o tema.</p>
         </section>
 
         <section class="lab-section" id="laboratorio">

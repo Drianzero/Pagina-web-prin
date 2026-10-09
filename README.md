@@ -1,6 +1,6 @@
 # Drian Dev
 
-Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas, preguntas, pistas, un editor de código, una vista previa, un reto diario de cinco preguntas con puntos y racha y un proyecto final guiado de cuatro pasos. El reto diario y el borrador del proyecto se guardan localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
+Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas, preguntas, pistas, un editor de código, una vista previa, un reto diario de cinco preguntas con puntos y racha, un proyecto final guiado de cuatro pasos y un glosario con búsqueda y filtros por tema. El reto diario y el borrador del proyecto se guardan localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
 
 ## Probar la página
 
@@ -26,6 +26,10 @@ Cada día se seleccionan cinco preguntas de programación. Cada respuesta correc
 ## Proyecto final guiado
 
 En **Proyecto final** construye un portafolio paso a paso: estructura HTML, estilos CSS, una interacción con JavaScript y una lista interactiva de ideas. El taller comprueba los elementos clave de cada paso, ejecuta el código en una vista previa aislada y guarda el borrador en el navegador. Los pasos, el código y el progreso no se sincronizan entre dispositivos ni con Supabase.
+
+## Glosario interactivo
+
+El glosario reúne veinte conceptos de HTML, CSS, JavaScript y desarrollo web. Busca por nombre, descripción o ejemplo, filtra por tema y utiliza la búsqueda sin preocuparte por tildes o mayúsculas.
 
 ## Publicar y compartir con GitHub Pages
 

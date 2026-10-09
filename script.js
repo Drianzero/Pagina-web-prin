@@ -427,6 +427,129 @@ const projectStages = [
     }
 ];
 
+const glossaryTerms = [
+    {
+        term: 'HTML',
+        category: 'HTML',
+        definition: 'Lenguaje que organiza el contenido de una página web, como títulos, párrafos, imágenes y botones.',
+        example: '<h1>Mi primera página</h1>'
+    },
+    {
+        term: 'Etiqueta',
+        category: 'HTML',
+        definition: 'Una instrucción entre signos < y > que indica qué tipo de contenido representa un elemento.',
+        example: '<p>Un párrafo</p>'
+    },
+    {
+        term: 'Atributo',
+        category: 'HTML',
+        definition: 'Información que se añade a una etiqueta para configurar un elemento, por ejemplo su identificador o destino.',
+        example: '<a href="#inicio">Volver</a>'
+    },
+    {
+        term: 'HTML semántico',
+        category: 'HTML',
+        definition: 'Uso de etiquetas que explican la función de su contenido, haciendo la página más fácil de entender y navegar.',
+        example: '<main>Contenido principal</main>'
+    },
+    {
+        term: 'Formulario',
+        category: 'HTML',
+        definition: 'Conjunto de campos que permite recibir información, como un nombre o un correo electrónico.',
+        example: '<input type="email" required>'
+    },
+    {
+        term: 'CSS',
+        category: 'CSS',
+        definition: 'Lenguaje que define la apariencia de una página: colores, tipografías, espacios y distribución.',
+        example: 'h1 { color: purple; }'
+    },
+    {
+        term: 'Selector',
+        category: 'CSS',
+        definition: 'Parte de una regla CSS que indica a qué elemento se le aplican estilos.',
+        example: 'p { color: teal; }'
+    },
+    {
+        term: 'Propiedad',
+        category: 'CSS',
+        definition: 'Característica visual que se cambia dentro de una regla de estilos.',
+        example: 'color: teal;'
+    },
+    {
+        term: 'Flexbox',
+        category: 'CSS',
+        definition: 'Modelo de CSS para ordenar, distribuir y alinear elementos en una fila o columna.',
+        example: '.fila { display: flex; gap: 1rem; }'
+    },
+    {
+        term: 'Diseño adaptable',
+        category: 'CSS',
+        definition: 'Técnica que ajusta el diseño para que una página se vea y funcione bien en pantallas de distintos tamaños.',
+        example: '@media (max-width: 600px) { ... }'
+    },
+    {
+        term: 'JavaScript',
+        category: 'JavaScript',
+        definition: 'Lenguaje que añade lógica e interacción a una página, como responder a clics o actualizar contenido.',
+        example: 'console.log("¡Hola!");'
+    },
+    {
+        term: 'Variable',
+        category: 'JavaScript',
+        definition: 'Nombre que permite guardar un valor para utilizarlo después en el programa.',
+        example: 'let puntos = 0;'
+    },
+    {
+        term: 'Función',
+        category: 'JavaScript',
+        definition: 'Grupo de instrucciones con nombre que se puede ejecutar cuando el programa lo necesita.',
+        example: 'function saludar() { ... }'
+    },
+    {
+        term: 'Condición',
+        category: 'JavaScript',
+        definition: 'Comprobación que permite elegir qué instrucciones ejecutar según una situación.',
+        example: 'if (puntos > 0) { ... }'
+    },
+    {
+        term: 'Bucle',
+        category: 'JavaScript',
+        definition: 'Estructura que repite instrucciones mientras se cumpla una condición.',
+        example: 'for (let i = 0; i < 3; i++) { ... }'
+    },
+    {
+        term: 'Arreglo',
+        category: 'JavaScript',
+        definition: 'Lista ordenada que guarda varios valores dentro de una sola variable.',
+        example: 'const temas = ["HTML", "CSS"];'
+    },
+    {
+        term: 'Evento',
+        category: 'JavaScript',
+        definition: 'Acción del navegador, como un clic, que el código puede detectar y atender.',
+        example: 'boton.addEventListener("click", saludar);'
+    },
+    {
+        term: 'DOM',
+        category: 'JavaScript',
+        definition: 'Representación de una página que JavaScript puede consultar y modificar mientras se usa.',
+        example: 'document.querySelector("h1");'
+    },
+    {
+        term: 'Frontend',
+        category: 'Web',
+        definition: 'Parte de una aplicación web que las personas ven y con la que interactúan en el navegador.',
+        example: 'HTML + CSS + JavaScript'
+    },
+    {
+        term: 'Navegador',
+        category: 'Web',
+        definition: 'Aplicación que abre sitios web y muestra sus páginas, estilos e interacciones.',
+        example: 'Chrome, Firefox, Edge o Safari'
+    }
+];
+
 const form = document.querySelector('#auth-form');
 const authDialog = document.querySelector('#auth-dialog');
 const authMessage = document.querySelector('#auth-message');
@@ -1022,6 +1145,72 @@ function initializeGuidedProject() {
     renderProjectStage();
 }
 
+function normalizeGlossaryText(text) {
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+}
+
+function initializeGlossary() {
+    const searchInput = document.querySelector('#glossary-search');
+    const clearButton = document.querySelector('#glossary-clear');
+    const grid = document.querySelector('#glossary-grid');
+    const count = document.querySelector('#glossary-count');
+    const emptyState = document.querySelector('#glossary-empty');
+    let activeCategory = 'all';
+
+    const renderTerms = () => {
+        const query = normalizeGlossaryText(searchInput.value.trim());
+        const matchingTerms = glossaryTerms.filter((entry) => {
+            const matchesCategory = activeCategory === 'all' || entry.category === activeCategory;
+            const searchableText = normalizeGlossaryText(`${entry.term} ${entry.category} ${entry.definition} ${entry.example}`);
+            return matchesCategory && searchableText.includes(query);
+        });
+
+        grid.replaceChildren(...matchingTerms.map((entry) => {
+            const card = document.createElement('article');
+            const category = document.createElement('span');
+            const title = document.createElement('h3');
+            const definition = document.createElement('p');
+            const example = document.createElement('code');
+
+            card.className = 'glossary-card';
+            category.className = 'glossary-category';
+            category.textContent = entry.category;
+            title.textContent = entry.term;
+            definition.textContent = entry.definition;
+            example.textContent = entry.example;
+            card.append(category, title, definition, example);
+            return card;
+        }));
+
+        const resultWord = matchingTerms.length === 1 ? 'concepto' : 'conceptos';
+        count.textContent = `${matchingTerms.length} ${resultWord.toLocaleUpperCase('es')}`;
+        emptyState.hidden = matchingTerms.length > 0;
+        grid.hidden = matchingTerms.length === 0;
+        clearButton.hidden = searchInput.value.length === 0;
+    };
+
+    searchInput.addEventListener('input', renderTerms);
+    clearButton.addEventListener('click', () => {
+        searchInput.value = '';
+        activeCategory = 'all';
+        document.querySelectorAll('.glossary-filter').forEach((button) => {
+            button.setAttribute('aria-pressed', String(button.dataset.category === 'all'));
+        });
+        renderTerms();
+        searchInput.focus();
+    });
+    document.querySelectorAll('.glossary-filter').forEach((button) => {
+        button.addEventListener('click', () => {
+            activeCategory = button.dataset.category;
+            document.querySelectorAll('.glossary-filter').forEach((filter) => {
+                filter.setAttribute('aria-pressed', String(filter === button));
+            });
+            renderTerms();
+        });
+    });
+    renderTerms();
+}
+
 function renderProgress() {
     const totalActivities = lessons.length * 2;
     const completedActivities = completedLessons.length + completedQuizzes.length;
@@ -1457,7 +1646,7 @@ if ('IntersectionObserver' in window) {
         });
     }, { threshold: 0.12 });
 
-    document.querySelectorAll('.progress-strip, .daily-quiz-section, .project-section, .learning-section, .lab-section').forEach((section) => {
+    document.querySelectorAll('.progress-strip, .daily-quiz-section, .learning-section, .project-section, .glossary-section, .lab-section').forEach((section) => {
         section.classList.add('scroll-reveal');
         revealObserver.observe(section);
     });
@@ -1470,6 +1659,7 @@ codeEditor.value = currentLesson.editor;
 runCode();
 initializeDailyGame();
 initializeGuidedProject();
+initializeGlossary();
 initializeSupabase();
 initializeMovementEffects();
 initializeCodeBackdrop();
