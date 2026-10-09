@@ -2004,8 +2004,237 @@ textarea:focus-visible {
     animation: progress-bump 380ms ease both;
 }
 
+body {
+    background:
+        radial-gradient(ellipse at 8% 5%, rgb(101 76 195 / 14%), transparent 30%),
+        radial-gradient(ellipse at 94% 34%, rgb(42 135 147 / 8%), transparent 27%),
+        var(--background);
+    background-attachment: fixed;
+}
+
+.code-backdrop {
+    opacity: 0.075;
+}
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 19;
+    width: 100%;
+    min-height: 78px;
+    padding-inline: max(32px, calc((100% - 1160px) / 2));
+    border-bottom-color: rgb(255 255 255 / 8%);
+    background: rgb(21 20 40 / 84%);
+    backdrop-filter: blur(18px);
+}
+
+.brand-mark {
+    display: grid;
+    width: 35px;
+    height: 35px;
+    place-items: center;
+    border: 1px solid rgb(211 243 107 / 19%);
+    border-radius: 11px;
+    background: linear-gradient(145deg, rgb(211 243 107 / 15%), rgb(155 134 255 / 13%));
+    letter-spacing: -3px;
+}
+
+nav {
+    align-items: center;
+    gap: 5px;
+    padding: 5px;
+    border: 1px solid rgb(255 255 255 / 7%);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 3%);
+}
+
+nav a {
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+nav a:hover,
+nav a:focus-visible {
+    background: rgb(255 255 255 / 7%);
+    color: var(--lime);
+}
+
+.account-button {
+    border-color: rgb(155 134 255 / 25%);
+    background: linear-gradient(145deg, rgb(155 134 255 / 11%), rgb(32 31 55 / 95%));
+    box-shadow: inset 0 1px rgb(255 255 255 / 4%);
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.account-button:hover {
+    transform: translateY(-1px);
+    border-color: rgb(155 134 255 / 48%);
+    box-shadow: 0 7px 22px rgb(0 0 0 / 18%);
+}
+
+.hero {
+    padding-top: 62px;
+}
+
+h1 {
+    letter-spacing: -0.052em;
+}
+
+h1 span {
+    color: var(--lime);
+    text-shadow: 0 0 34px rgb(211 243 107 / 19%);
+}
+
+.live-label {
+    padding: 7px 11px;
+    border: 1px solid rgb(211 243 107 / 16%);
+    border-radius: 999px;
+    background: rgb(211 243 107 / 5%);
+    font-size: 0.64rem;
+}
+
+.hero-content > p {
+    color: #c1bed2;
+    line-height: 1.75;
+}
+
+.hero-note {
+    width: fit-content;
+    padding: 7px 11px;
+    border: 1px solid rgb(255 255 255 / 7%);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 3%);
+    font-size: 0.7rem;
+}
+
+.hero-visual {
+    border-color: rgb(186 174 255 / 16%);
+    background:
+        radial-gradient(ellipse at 50% 55%, rgb(155 134 255 / 30%), transparent 55%),
+        radial-gradient(ellipse at 80% 15%, rgb(211 243 107 / 8%), transparent 45%),
+        linear-gradient(140deg, #292646, #1a2038);
+    box-shadow: 0 26px 70px rgb(5 4 17 / 22%), inset 0 1px rgb(255 255 255 / 5%);
+}
+
+.visual-code {
+    border-color: rgb(186 174 255 / 17%);
+    background: rgb(22 21 39 / 92%);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 25%);
+}
+
+.progress-strip,
+.daily-quiz-card,
+.lesson-card,
+.lesson-panel,
+.project-workbench,
+.glossary-card,
+.editor-panel,
+.preview-panel {
+    box-shadow: 0 16px 45px rgb(5 4 17 / 13%), inset 0 1px rgb(255 255 255 / 3%);
+}
+
+.progress-strip {
+    border-color: rgb(186 174 255 / 14%);
+    background: linear-gradient(115deg, rgb(39 36 69 / 97%), rgb(27 27 48 / 98%));
+}
+
+.progress-icon {
+    border: 1px solid rgb(211 243 107 / 16%);
+    box-shadow: 0 0 24px rgb(211 243 107 / 7%);
+}
+
+.progress-track {
+    height: 9px;
+    background: #3a3652;
+}
+
+.progress-track > span {
+    background: linear-gradient(90deg, #9178ff, #b59cff 52%, var(--lime));
+    box-shadow: 0 0 13px rgb(155 134 255 / 38%);
+}
+
+.daily-quiz-card {
+    border-color: rgb(186 174 255 / 16%);
+    background: linear-gradient(125deg, rgb(36 34 62 / 98%), rgb(27 27 48 / 98%));
+}
+
+.daily-quiz-aside {
+    background:
+        radial-gradient(ellipse at 85% 15%, rgb(211 243 107 / 9%), transparent 58%),
+        linear-gradient(155deg, rgb(155 134 255 / 10%), rgb(155 134 255 / 4%));
+}
+
+.lesson-card {
+    border-color: rgb(255 255 255 / 8%);
+    background: linear-gradient(140deg, rgb(36 34 60 / 96%), rgb(27 27 48 / 98%));
+}
+
+.lesson-card:hover,
+.lesson-card[aria-current="step"] {
+    border-color: rgb(155 134 255 / 66%);
+    background: linear-gradient(140deg, rgb(54 46 88 / 96%), rgb(33 31 57 / 98%));
+    box-shadow: 0 8px 24px rgb(5 4 17 / 24%), 0 0 22px rgb(155 134 255 / 7%);
+}
+
+.lesson-panel {
+    border-color: rgb(186 174 255 / 15%);
+    background:
+        radial-gradient(ellipse at 100% 0%, rgb(155 134 255 / 18%), transparent 45%),
+        linear-gradient(135deg, #22213b, #1b1a30);
+}
+
+.practice-challenge {
+    border-color: rgb(211 243 107 / 22%);
+    background: linear-gradient(120deg, rgb(211 243 107 / 7%), rgb(211 243 107 / 3%));
+}
+
+.project-workbench {
+    border-color: rgb(186 174 255 / 16%);
+    background: linear-gradient(125deg, rgb(36 34 62 / 98%), rgb(25 25 44 / 98%));
+}
+
+.project-steps {
+    background:
+        radial-gradient(ellipse at 10% 0%, rgb(155 134 255 / 9%), transparent 60%),
+        rgb(255 255 255 / 2%);
+}
+
+.project-editor,
+#code-editor {
+    border-color: rgb(186 174 255 / 20%);
+    background: linear-gradient(145deg, #171628, #12111f);
+    box-shadow: inset 0 2px 12px rgb(0 0 0 / 18%);
+}
+
+.project-preview,
+.preview-panel iframe {
+    border-color: rgb(186 174 255 / 20%);
+    box-shadow: 0 8px 22px rgb(0 0 0 / 12%);
+}
+
+.glossary-card {
+    border-color: rgb(255 255 255 / 9%);
+    background: linear-gradient(145deg, rgb(36 34 60 / 96%), rgb(26 25 45 / 98%));
+}
+
+.glossary-card:hover {
+    border-color: rgb(155 134 255 / 43%);
+    background: linear-gradient(145deg, rgb(47 42 77 / 98%), rgb(29 28 51 / 98%));
+    box-shadow: 0 14px 32px rgb(5 4 17 / 23%), 0 0 25px rgb(155 134 255 / 7%);
+}
+
+.glossary-card code {
+    border-color: rgb(186 174 255 / 12%);
+    background: linear-gradient(135deg, #181729, #131321);
+}
+
+.site-footer {
+    border-top: 1px solid rgb(255 255 255 / 8%);
+}
+
 @media (max-width: 850px) {
-    .site-header,
     .hero,
     .progress-strip,
     .daily-quiz-section,
@@ -2014,6 +2243,20 @@ textarea:focus-visible {
     .learning-section,
     .site-footer {
         width: calc(100% - 40px);
+    }
+
+    .site-header {
+        width: 100%;
+        padding-inline: 20px;
+    }
+
+    nav {
+        gap: 2px;
+    }
+
+    nav a {
+        padding: 7px 8px;
+        font-size: 0.72rem;
     }
 
     .hero {
@@ -2089,14 +2332,18 @@ textarea:focus-visible {
 
 @media (max-width: 640px) {
     html {
-        scroll-padding-top: 72px;
+        scroll-padding-top: 112px;
     }
 
     .site-header {
-        min-height: 70px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: 52px auto;
+        gap: 4px 10px;
+        min-height: 0;
+        padding: 8px 16px 9px;
     }
 
-    .site-header,
     .hero,
     .progress-strip,
     .daily-quiz-section,
@@ -2108,8 +2355,37 @@ textarea:focus-visible {
     }
 
     nav {
-        gap: 10px;
-        font-size: 0.72rem;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        gap: 4px;
+        scrollbar-width: none;
+        white-space: nowrap;
+    }
+
+    nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    nav a {
+        flex: 0 0 auto;
+        padding: 6px 9px;
+        font-size: 0.7rem;
+    }
+
+    .brand {
+        min-width: 0;
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .account-button {
+        max-width: 150px;
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
     }
 
     .account-button {
@@ -2120,11 +2396,24 @@ textarea:focus-visible {
 
     .hero {
         grid-template-columns: 1fr;
-        padding: 47px 0 30px;
+        padding: 38px 0 30px;
+    }
+
+    h1 {
+        font-size: clamp(2.8rem, 11.5vw, 4rem);
+        letter-spacing: -0.055em;
+        line-height: 1.02;
+    }
+
+    .live-label {
+        max-width: 100%;
+        flex-wrap: wrap;
+        line-height: 1.45;
     }
 
     .hero-visual {
         min-height: 280px;
+        border-radius: 25px;
     }
 
     .hero-visual img {
@@ -2363,7 +2652,6 @@ textarea:focus-visible {
 }
 
 @media (max-width: 390px) {
-    .site-header,
     .hero,
     .progress-strip,
     .daily-quiz-section,
@@ -2383,17 +2671,14 @@ textarea:focus-visible {
         margin-left: -5px;
     }
 
-    nav {
-        width: calc(100vw - 230px);
-        overflow-x: auto;
-        gap: 10px;
-        font-size: 0.66rem;
-        scrollbar-width: none;
-        white-space: nowrap;
+    .site-header {
+        width: 100%;
+        padding-right: 12px;
+        padding-left: 12px;
     }
 
-    nav::-webkit-scrollbar {
-        display: none;
+    nav {
+        width: 100%;
     }
 
     .account-button {
@@ -2411,6 +2696,16 @@ textarea:focus-visible {
 
     .account-button > span:last-child {
         display: none;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .button-bright {
+        box-shadow: 0 8px 24px rgb(211 243 107 / 15%);
+    }
+
+    .hero-visual img {
+        animation-duration: 5s;
     }
 }
 
