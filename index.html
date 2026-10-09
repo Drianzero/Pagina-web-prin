@@ -21,6 +21,7 @@
         <a class="brand" href="#inicio" aria-label="Drian Dev, inicio"><span class="brand-mark">&lt;/&gt;</span> drian<span class="brand-accent">dev</span></a>
         <nav aria-label="Navegación principal">
             <a href="#ruta">Mi ruta</a>
+            <a href="#reto-diario">Reto diario</a>
             <a href="#laboratorio">Laboratorio</a>
         </nav>
         <button class="account-button" id="account-button" type="button">
@@ -60,6 +61,46 @@
             </div>
             <strong class="progress-percent" id="progress-percent">0%</strong>
             <span class="progress-count" id="progress-count">0 / 24 actividades</span>
+        </section>
+
+        <section class="daily-quiz-section" id="reto-diario" aria-labelledby="daily-quiz-title">
+            <div class="section-heading daily-quiz-heading">
+                <div>
+                    <p class="eyebrow">CINCO PREGUNTAS · UN NUEVO RETO CADA DÍA</p>
+                    <h2 id="daily-quiz-title">Pon a prueba lo que sabes.</h2>
+                    <p>Responde, gana puntos y vuelve mañana para mantener tu racha.</p>
+                </div>
+                <div class="daily-quiz-stats" aria-label="Tus resultados del reto diario">
+                    <div class="daily-stat">
+                        <span aria-hidden="true">✦</span>
+                        <strong id="daily-points">0</strong>
+                        <span>puntos</span>
+                    </div>
+                    <div class="daily-stat">
+                        <span aria-hidden="true">🔥</span>
+                        <strong id="daily-streak">0</strong>
+                        <span>días seguidos</span>
+                    </div>
+                </div>
+            </div>
+            <article class="daily-quiz-card" id="daily-quiz-card" aria-labelledby="daily-question">
+                <div class="daily-quiz-main">
+                    <div class="daily-quiz-progress">
+                        <span id="daily-question-count">RETO DIARIO · PREGUNTA 1 DE 5</span>
+                        <span>+10 puntos por respuesta correcta</span>
+                    </div>
+                    <h3 id="daily-question">Preparando tu reto...</h3>
+                    <div class="daily-quiz-options" id="daily-options" role="group" aria-labelledby="daily-question"></div>
+                    <p class="daily-quiz-feedback" id="daily-feedback" role="status" aria-live="polite"></p>
+                    <button class="button button-bright daily-next-button" id="daily-next" type="button" hidden>Siguiente pregunta <span aria-hidden="true">→</span></button>
+                </div>
+                <aside class="daily-quiz-aside">
+                    <span class="daily-flame" aria-hidden="true">🔥</span>
+                    <strong id="daily-streak-message">¡Empieza hoy tu racha!</strong>
+                    <p>Cada día tendrás cinco preguntas distintas. Tus puntos y tu racha se guardan en este navegador.</p>
+                    <p class="daily-storage-note" id="daily-storage-note" role="status" aria-live="polite"></p>
+                </aside>
+            </article>
         </section>
 
         <section class="learning-section" id="ruta">

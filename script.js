@@ -193,6 +193,84 @@ const lessons = [
     }
 ];
 
+const dailyQuizQuestions = [
+    {
+        id: 'html-heading',
+        question: '¿Qué etiqueta crea el título principal de una página?',
+        choices: ['<h1>', '<title-text>', '<heading>'],
+        answer: 0
+    },
+    {
+        id: 'css-style',
+        question: '¿Qué lenguaje se usa para cambiar los colores y estilos de una web?',
+        choices: ['HTML', 'CSS', 'SQL'],
+        answer: 1
+    },
+    {
+        id: 'js-constant',
+        question: '¿Qué palabra declara un valor que no volverás a asignar?',
+        choices: ['const', 'repeat', 'style'],
+        answer: 0
+    },
+    {
+        id: 'semantic-main',
+        question: '¿Qué etiqueta señala el contenido principal de una página?',
+        choices: ['<footer>', '<main>', '<small>'],
+        answer: 1
+    },
+    {
+        id: 'flexbox',
+        question: '¿Qué declaración activa Flexbox?',
+        choices: ['display: flex', 'position: flex', 'align: row'],
+        answer: 0
+    },
+    {
+        id: 'required',
+        question: '¿Qué atributo pide que se complete un campo de formulario?',
+        choices: ['placeholder', 'required', 'autofocus'],
+        answer: 1
+    },
+    {
+        id: 'variables',
+        question: '¿Qué palabra permite cambiar después el valor de una variable?',
+        choices: ['let', 'const', '<p>'],
+        answer: 0
+    },
+    {
+        id: 'conditionals',
+        question: '¿Qué bloque ofrece una alternativa cuando if es falso?',
+        choices: ['style', 'else', 'main'],
+        answer: 1
+    },
+    {
+        id: 'functions',
+        question: '¿Qué hace que se ejecuten las instrucciones de una función?',
+        choices: ['Llamarla por su nombre', 'Cambiarle el color', 'Escribirla dentro de un párrafo'],
+        answer: 0
+    },
+    {
+        id: 'loops',
+        question: '¿Para qué sirve un bucle?',
+        choices: ['Para repetir instrucciones', 'Para borrar el HTML', 'Para crear una contraseña'],
+        answer: 0
+    },
+    {
+        id: 'arrays',
+        question: '¿Qué signos rodean los valores de un arreglo en JavaScript?',
+        choices: ['Llaves { }', 'Corchetes [ ]', 'Paréntesis ( )'],
+        answer: 1
+    },
+    {
+        id: 'dom-text',
+        question: '¿Qué propiedad permite cambiar el texto de un elemento?',
+        choices: ['textContent', 'border-radius', 'font-family'],
+        answer: 0
+    }
+];
+
+const dailyQuizStorageKey = 'drian-dev-daily-quiz-v1';
+const dailyQuizLength = 5;
+
 const form = document.querySelector('#auth-form');
 const authDialog = document.querySelector('#auth-dialog');
 const authMessage = document.querySelector('#auth-message');
@@ -221,6 +299,9 @@ let authMode = 'signIn';
 let saveQueue = Promise.resolve();
 let saveTimer;
 let supabaseClient = null;
+let dailyGame;
+let dailyStorageAvailable = true;
+let dailyStorageMessage = '';
 
 function setAuthMessage(message, isError = false) {
     authMessage.textContent = message;
@@ -384,6 +465,233 @@ function playEffect(element, className) {
     element.addEventListener('animationend', () => {
         element.classList.remove(className);
     }, { once: true });
+}
+
+function getLocalDateKey(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function getPreviousDateKey(dateKey) {
+    const [year, month, day] = dateKey.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    date.setDate(date.getDate() - 1);
+    return getLocalDateKey(date);
+}
+
+function createDailyQuestionIds() {
+    const questionIds = dailyQuizQuestions.map((question) => question.id);
+    for (let index = questionIds.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [questionIds[index], questionIds[swapIndex]] = [questionIds[swapIndex], questionIds[index]];
+    }
+    return questionIds.slice(0, dailyQuizLength);
+}
+
+function isValidDailyRound(round, today) {
+    if (
+        round?.gameDate !== today
+        || !Array.isArray(round.questionIds)
+        || round.questionIds.length !== dailyQuizLength
+        || new Set(round.questionIds).size !== dailyQuizLength
+        || round.questionIds.some((id) => !dailyQuizQuestions.some((question) => question.id === id))
+        || !Array.isArray(round.answers)
+        || round.answers.length !== dailyQuizLength
+        || !Number.isInteger(round.currentIndex)
+        || round.currentIndex < 0
+        || round.currentIndex >= dailyQuizLength
+    ) {
+        return false;
+    }
+
+    return round.answers.every((answer, index) => {
+        const isValidAnswer = answer === null || (
+            Number.isInteger(answer)
+            && answer >= 0
+            && answer < dailyQuizQuestions.find((question) => question.id === round.questionIds[index]).choices.length
+        );
+        return isValidAnswer && (index < round.currentIndex ? answer !== null : index === round.currentIndex || answer === null);
+    });
+}
+
+function createDailyGame(savedGame, today) {
+    const validStats = savedGame
+        && Number.isSafeInteger(savedGame.points)
+        && savedGame.points >= 0
+        && Number.isSafeInteger(savedGame.streak)
+        && savedGame.streak >= 0;
+    const points = validStats ? savedGame.points : 0;
+    const streak = validStats ? savedGame.streak : 0;
+    const lastCompletedDate = validStats
+        && typeof savedGame.lastCompletedDate === 'string'
+        && /^\d{4}-\d{2}-\d{2}$/.test(savedGame.lastCompletedDate)
+        ? savedGame.lastCompletedDate
+        : '';
+
+    if (isValidDailyRound(savedGame, today)) {
+        return {
+            points,
+            streak,
+            lastCompletedDate,
+            gameDate: today,
+            questionIds: savedGame.questionIds,
+            answers: savedGame.answers,
+            currentIndex: savedGame.currentIndex
+        };
+    }
+
+    return {
+        points,
+        streak,
+        lastCompletedDate,
+        gameDate: today,
+        questionIds: createDailyQuestionIds(),
+        answers: Array(dailyQuizLength).fill(null),
+        currentIndex: 0
+    };
+}
+
+function saveDailyGame() {
+    if (!dailyStorageAvailable) {
+        return;
+    }
+
+    try {
+        localStorage.setItem(dailyQuizStorageKey, JSON.stringify(dailyGame));
+    } catch (error) {
+        console.error('No se pudo guardar el reto diario:', error);
+        dailyStorageAvailable = false;
+        dailyStorageMessage = 'No se pudieron guardar tus puntos en este navegador.';
+        document.querySelector('#daily-storage-note').textContent = dailyStorageMessage;
+    }
+}
+
+function renderDailyGame() {
+    const points = document.querySelector('#daily-points');
+    const streak = document.querySelector('#daily-streak');
+    const questionCount = document.querySelector('#daily-question-count');
+    const questionTitle = document.querySelector('#daily-question');
+    const options = document.querySelector('#daily-options');
+    const feedback = document.querySelector('#daily-feedback');
+    const nextButton = document.querySelector('#daily-next');
+    const streakMessage = document.querySelector('#daily-streak-message');
+    const storageNote = document.querySelector('#daily-storage-note');
+    const isComplete = dailyGame.answers.every((answer) => answer !== null);
+    const question = isComplete
+        ? null
+        : dailyQuizQuestions.find((item) => item.id === dailyGame.questionIds[dailyGame.currentIndex]);
+    const selectedAnswer = isComplete ? dailyGame.answers[dailyQuizLength - 1] : dailyGame.answers[dailyGame.currentIndex];
+    const answered = selectedAnswer !== null;
+    const isCorrect = answered && selectedAnswer === question?.answer;
+
+    points.textContent = String(dailyGame.points);
+    streak.textContent = String(dailyGame.streak);
+    questionCount.textContent = isComplete
+        ? 'RETO DE HOY COMPLETADO'
+        : `PREGUNTA ${dailyGame.currentIndex + 1} DE ${dailyQuizLength}`;
+    questionTitle.textContent = isComplete ? '¡Completaste el reto de hoy!' : question.question;
+    options.replaceChildren();
+    feedback.textContent = '';
+    feedback.classList.remove('is-error');
+    nextButton.hidden = true;
+
+    if (!isComplete) {
+        question.choices.forEach((choice, index) => {
+            const option = document.createElement('button');
+            option.className = 'daily-answer';
+            option.type = 'button';
+            option.textContent = choice;
+            option.disabled = answered;
+            option.setAttribute('aria-pressed', String(selectedAnswer === index));
+            if (answered && index === question.answer) {
+                option.classList.add('is-correct');
+            } else if (answered && index === selectedAnswer) {
+                option.classList.add('is-incorrect');
+            }
+            option.addEventListener('click', () => answerDailyQuestion(index));
+            options.append(option);
+        });
+
+        if (answered) {
+            if (isCorrect) {
+                feedback.textContent = '¡Correcto! Sumaste 10 puntos.';
+            } else {
+                feedback.textContent = `Esta vez no. La respuesta correcta era: ${question.choices[question.answer]}.`;
+                feedback.classList.add('is-error');
+            }
+            nextButton.hidden = dailyGame.currentIndex === dailyQuizLength - 1;
+        }
+    } else {
+        const lastQuestion = dailyQuizQuestions.find((item) => item.id === dailyGame.questionIds[dailyQuizLength - 1]);
+        const finalAnswerWasCorrect = selectedAnswer === lastQuestion.answer;
+        feedback.textContent = `¡Reto terminado! ${finalAnswerWasCorrect ? 'La última respuesta fue correcta.' : 'Sigue practicando y vuelve mañana.'}`;
+        streakMessage.textContent = '¡Vuelve mañana para continuar tu racha!';
+    }
+
+    if (!isComplete) {
+        streakMessage.textContent = dailyGame.lastCompletedDate === getPreviousDateKey(dailyGame.gameDate)
+            ? '¡Completa el reto para mantener tu racha!'
+            : dailyGame.streak > 0
+                ? '¡Tu racha te espera!'
+                : '¡Empieza hoy tu racha!';
+    }
+
+    storageNote.textContent = dailyStorageMessage || 'Puntos y racha guardados en este navegador.';
+}
+
+function answerDailyQuestion(selectedAnswer) {
+    if (dailyGame.answers[dailyGame.currentIndex] !== null) {
+        return;
+    }
+
+    const question = dailyQuizQuestions.find((item) => item.id === dailyGame.questionIds[dailyGame.currentIndex]);
+    dailyGame.answers[dailyGame.currentIndex] = selectedAnswer;
+    if (selectedAnswer === question.answer) {
+        dailyGame.points += 10;
+    }
+
+    const isComplete = dailyGame.answers.every((answer) => answer !== null);
+    if (isComplete && dailyGame.lastCompletedDate !== dailyGame.gameDate) {
+        dailyGame.streak = dailyGame.lastCompletedDate === getPreviousDateKey(dailyGame.gameDate)
+            ? dailyGame.streak + 1
+            : 1;
+        dailyGame.lastCompletedDate = dailyGame.gameDate;
+    }
+
+    saveDailyGame();
+    renderDailyGame();
+    if (selectedAnswer === question.answer) {
+        playEffect(document.querySelector('#daily-quiz-card'), 'feedback-correct');
+    }
+}
+
+function initializeDailyGame() {
+    let savedGame = null;
+    try {
+        const storedGame = localStorage.getItem(dailyQuizStorageKey);
+        if (storedGame) {
+            savedGame = JSON.parse(storedGame);
+        }
+    } catch (error) {
+        console.error('No se pudo leer el reto diario guardado:', error);
+        dailyStorageMessage = 'No se pudo leer el reto guardado; empieza uno nuevo hoy.';
+    }
+
+    dailyGame = createDailyGame(savedGame, getLocalDateKey());
+    if (!isValidDailyRound(savedGame, dailyGame.gameDate)) {
+        saveDailyGame();
+    }
+    document.querySelector('#daily-next').addEventListener('click', () => {
+        if (dailyGame.answers[dailyGame.currentIndex] === null || dailyGame.currentIndex >= dailyQuizLength - 1) {
+            return;
+        }
+        dailyGame.currentIndex += 1;
+        saveDailyGame();
+        renderDailyGame();
+    });
+    renderDailyGame();
 }
 
 function renderProgress() {
@@ -821,7 +1129,7 @@ if ('IntersectionObserver' in window) {
         });
     }, { threshold: 0.12 });
 
-    document.querySelectorAll('.progress-strip, .learning-section, .lab-section').forEach((section) => {
+    document.querySelectorAll('.progress-strip, .daily-quiz-section, .learning-section, .lab-section').forEach((section) => {
         section.classList.add('scroll-reveal');
         revealObserver.observe(section);
     });
@@ -832,6 +1140,7 @@ renderProgress();
 renderLesson();
 codeEditor.value = currentLesson.editor;
 runCode();
+initializeDailyGame();
 initializeSupabase();
 initializeMovementEffects();
 initializeCodeBackdrop();
