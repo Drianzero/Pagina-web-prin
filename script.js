@@ -688,25 +688,25 @@ function initializeCodeBackdrop() {
     const codeColumns = [
         {
             position: 'code-column-one',
-            duration: '46s',
+            duration: '32s',
             delay: '-31s',
             lines: ['const idea = "posible";', 'function aprender() {', '  return practicar();', '}', 'let progreso = 0;', 'if (curiosidad) {', '  progreso++;', '}']
         },
         {
             position: 'code-column-two',
-            duration: '58s',
+            duration: '39s',
             delay: '-44s',
             lines: ['<main class="proyecto">', '  <h1>Hola, mundo</h1>', '  <p>Aprender haciendo</p>', '</main>', '.proyecto {', '  display: grid;', '  gap: 1rem;', '}']
         },
         {
             position: 'code-column-three',
-            duration: '51s',
+            duration: '35s',
             delay: '-19s',
             lines: ['const colores = [];', 'boton.addEventListener(', '  "click", () => {', '    crearIdea();', '  }', ');', 'console.log("¡bien!");']
         },
         {
             position: 'code-column-four',
-            duration: '64s',
+            duration: '43s',
             delay: '-52s',
             lines: ['for (const reto of ruta) {', '  intenta(reto);', '  aprende();', '}', '/* sigue probando */', 'const futuro = hoy;']
         }

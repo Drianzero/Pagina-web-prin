@@ -1873,6 +1873,23 @@ textarea:focus-visible {
     }
 }
 
+@keyframes backdrop-aurora {
+    0% {
+        transform: translate3d(-3%, -2%, 0) scale(0.96);
+        opacity: 0.65;
+    }
+
+    50% {
+        transform: translate3d(2%, 3%, 0) scale(1.04);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate3d(4%, -2%, 0) scale(1);
+        opacity: 0.75;
+    }
+}
+
 @keyframes lesson-swap {
     from {
         opacity: 0.45;
@@ -2013,7 +2030,25 @@ body {
 }
 
 .code-backdrop {
-    opacity: 0.075;
+    opacity: 0.13;
+}
+
+.code-backdrop::before {
+    position: absolute;
+    inset: -20%;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse at 18% 25%, rgb(126 94 255 / 26%), transparent 31%),
+        radial-gradient(ellipse at 78% 38%, rgb(45 193 190 / 17%), transparent 28%),
+        radial-gradient(ellipse at 52% 82%, rgb(211 243 107 / 12%), transparent 30%);
+    content: "";
+    filter: blur(42px);
+    animation: backdrop-aurora 24s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+}
+
+.code-backdrop-column {
+    z-index: 1;
 }
 
 .site-header {
