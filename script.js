@@ -1,6 +1,7 @@
 const lessons = [
     {
         id: 'html',
+        level: 'beginner',
         number: '01',
         title: 'Construye con HTML',
         shortTitle: 'Estructura web',
@@ -17,6 +18,7 @@ const lessons = [
     },
     {
         id: 'css',
+        level: 'beginner',
         number: '02',
         title: 'Diseña con CSS',
         shortTitle: 'Estilos y color',
@@ -33,6 +35,7 @@ const lessons = [
     },
     {
         id: 'javascript',
+        level: 'beginner',
         number: '03',
         title: 'Dale vida con JavaScript',
         shortTitle: 'Lógica e interacción',
@@ -49,6 +52,7 @@ const lessons = [
     },
     {
         id: 'semantic-html',
+        level: 'beginner',
         number: '04',
         title: 'Organiza una página',
         shortTitle: 'HTML semántico',
@@ -65,6 +69,7 @@ const lessons = [
     },
     {
         id: 'flexbox',
+        level: 'intermediate',
         number: '05',
         title: 'Alinea con Flexbox',
         shortTitle: 'Diseño con Flexbox',
@@ -81,6 +86,7 @@ const lessons = [
     },
     {
         id: 'forms',
+        level: 'intermediate',
         number: '06',
         title: 'Crea un formulario',
         shortTitle: 'Formularios HTML',
@@ -97,6 +103,7 @@ const lessons = [
     },
     {
         id: 'variables',
+        level: 'intermediate',
         number: '07',
         title: 'Guarda datos en variables',
         shortTitle: 'Variables JavaScript',
@@ -113,6 +120,7 @@ const lessons = [
     },
     {
         id: 'conditionals',
+        level: 'intermediate',
         number: '08',
         title: 'Toma decisiones con if',
         shortTitle: 'Condiciones',
@@ -129,6 +137,7 @@ const lessons = [
     },
     {
         id: 'functions',
+        level: 'advanced',
         number: '09',
         title: 'Crea tus propias funciones',
         shortTitle: 'Funciones reutilizables',
@@ -145,6 +154,7 @@ const lessons = [
     },
     {
         id: 'loops',
+        level: 'advanced',
         number: '10',
         title: 'Repite tareas con bucles',
         shortTitle: 'Bucles for',
@@ -161,6 +171,7 @@ const lessons = [
     },
     {
         id: 'arrays',
+        level: 'advanced',
         number: '11',
         title: 'Explora listas de datos',
         shortTitle: 'Listas y arreglos',
@@ -177,6 +188,7 @@ const lessons = [
     },
     {
         id: 'dom',
+        level: 'advanced',
         number: '12',
         title: 'Cambia la página con el DOM',
         shortTitle: 'Interacción con el DOM',
@@ -568,8 +580,10 @@ const progressTrack = document.querySelector('.progress-track');
 const progressPercent = document.querySelector('#progress-percent');
 const progressCount = document.querySelector('#progress-count');
 const progressCaption = document.querySelector('#progress-caption');
+const levelOptions = document.querySelectorAll('.level-option');
 
 let currentLesson = lessons[0];
+let currentLevel = currentLesson.level;
 let completedLessons = [];
 let completedQuizzes = [];
 let currentUser = null;
@@ -1237,6 +1251,10 @@ function renderProgress() {
         button.querySelector('.lesson-check').textContent = isComplete ? '✓' : '';
         button.setAttribute('aria-current', lesson.id === currentLesson.id ? 'step' : 'false');
     });
+
+    levelOptions.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.level === currentLevel));
+    });
 }
 
 function renderLesson(feedback = '') {
@@ -1324,12 +1342,13 @@ function renderLesson(feedback = '') {
 }
 
 function renderLessonList() {
-    lessonList.innerHTML = lessons.map((lesson) => `
+    const levelLessons = lessons.filter((lesson) => lesson.level === currentLevel);
+    lessonList.innerHTML = levelLessons.map((lesson) => `
         <button class="lesson-card" type="button" data-lesson="${lesson.id}" aria-current="false">
             <span class="lesson-number">${lesson.number}</span>
             <span class="lesson-card-copy">
                 <strong>${lesson.title}</strong>
-                <span>Lección · 5 min</span>
+                <span>${lesson.number} · 5 min</span>
             </span>
             <span class="lesson-check" aria-hidden="true"></span>
         </button>
@@ -1338,6 +1357,7 @@ function renderLessonList() {
     lessonList.querySelectorAll('.lesson-card').forEach((button) => {
         button.addEventListener('click', () => {
             currentLesson = lessons.find((lesson) => lesson.id === button.dataset.lesson);
+            currentLevel = currentLesson.level;
             codeEditor.value = currentLesson.editor;
             editorMessage.textContent = '';
             document.querySelector('#lesson-status').textContent = '';
@@ -1348,6 +1368,27 @@ function renderLessonList() {
             saveProgress();
         });
     });
+}
+
+function selectLessonLevel(level) {
+    if (level === currentLevel || !lessons.some((lesson) => lesson.level === level)) {
+        return;
+    }
+
+    currentLevel = level;
+    const levelLessons = lessons.filter((lesson) => lesson.level === currentLevel);
+    if (currentLesson.level !== currentLevel) {
+        currentLesson = levelLessons[0];
+        codeEditor.value = currentLesson.editor;
+        editorMessage.textContent = '';
+        runCode();
+    }
+
+    document.querySelector('#lesson-status').textContent = '';
+    renderLessonList();
+    renderProgress();
+    renderLesson();
+    saveProgress();
 }
 
 function runCode() {
@@ -1415,8 +1456,10 @@ async function loadProgress(user) {
     completedLessons = (data?.completed_lessons || []).filter((id) => lessons.some((lesson) => lesson.id === id));
     completedQuizzes = (data?.completed_quizzes || []).filter((id) => lessons.some((lesson) => lesson.id === id));
     currentLesson = lessons.find((lesson) => lesson.id === data?.current_lesson) || lessons[0];
+    currentLevel = currentLesson.level;
     codeEditor.value = data?.editor_code || currentLesson.editor;
     progressLoaded = true;
+    renderLessonList();
     renderProgress();
     renderLesson();
     runCode();
@@ -1655,6 +1698,9 @@ if ('IntersectionObserver' in window) {
 renderLessonList();
 renderProgress();
 renderLesson();
+levelOptions.forEach((button) => {
+    button.addEventListener('click', () => selectLessonLevel(button.dataset.level));
+});
 codeEditor.value = currentLesson.editor;
 runCode();
 initializeDailyGame();

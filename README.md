@@ -1,6 +1,6 @@
 # Drian Dev
 
-Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas, preguntas, pistas, un editor de código, una vista previa, un reto diario de cinco preguntas con puntos y racha, un proyecto final guiado de cuatro pasos y un glosario con búsqueda y filtros por tema. El reto diario y el borrador del proyecto se guardan localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
+Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas organizadas en tres niveles seleccionables de cuatro prácticas cada uno (principiante, intermedio y avanzado), preguntas, pistas, un editor de código, una vista previa, un reto diario de cinco preguntas con puntos y racha, un proyecto final guiado de cuatro pasos y un glosario con búsqueda y filtros por tema. El reto diario y el borrador del proyecto se guardan localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
 
 ## Probar la página
 
