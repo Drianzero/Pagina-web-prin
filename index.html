@@ -9,10 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=welcome-diagnostic">
+    <link rel="stylesheet" href="styles.css?v=cyber-chat">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
-    <script src="script.js?v=welcome-diagnostic" defer></script>
+    <script src="script.js?v=cyber-chat" defer></script>
 </head>
 <body>
     <div class="scroll-progress" id="scroll-progress" role="progressbar" aria-label="Progreso de lectura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
@@ -266,19 +266,55 @@
     </footer>
 
     <aside class="welcome-robot is-visible" id="welcome-robot" aria-label="Asistente de bienvenida">
-        <div class="welcome-robot-avatar" aria-hidden="true">
+        <button class="welcome-robot-avatar robot-open-button" id="open-cyber-avatar" type="button" aria-label="Hablar con Cyber">
             <span class="robot-antenna"></span>
             <span class="robot-eye robot-eye-left"></span>
             <span class="robot-eye robot-eye-right"></span>
             <span class="robot-mouth"></span>
             <span class="robot-wave">✦</span>
-        </div>
+        </button>
         <div class="welcome-robot-copy">
-            <p role="status">¡Hola! Soy Byte 🤖 ¿Te ayudo a encontrar tu nivel?</p>
-            <button class="welcome-robot-action" id="open-level-quiz" type="button">Descubrir mi nivel <span aria-hidden="true">→</span></button>
+            <p role="status">¡Hola! Soy Cyber 🤖 ¿Qué te gustaría aprender?</p>
+            <div class="welcome-robot-actions">
+                <button class="welcome-robot-action" id="open-cyber-chat" type="button">Hablar con Cyber <span aria-hidden="true">→</span></button>
+                <button class="welcome-robot-action" id="open-level-quiz" type="button">Descubrir mi nivel</button>
+            </div>
         </div>
         <button class="welcome-robot-close" id="close-welcome-robot" type="button" aria-label="Cerrar saludo">×</button>
     </aside>
+    <button class="cyber-launcher" id="reopen-cyber" type="button" aria-label="Volver a hablar con Cyber" hidden>
+        <span aria-hidden="true">🤖</span>
+    </button>
+
+    <dialog class="cyber-chat-dialog" id="cyber-chat-dialog" aria-labelledby="cyber-chat-title">
+        <header class="cyber-chat-header">
+            <div class="welcome-robot-avatar cyber-chat-avatar" aria-hidden="true">
+                <span class="robot-antenna"></span>
+                <span class="robot-eye robot-eye-left"></span>
+                <span class="robot-eye robot-eye-right"></span>
+                <span class="robot-mouth"></span>
+            </div>
+            <div>
+                <h2 id="cyber-chat-title">Cyber</h2>
+                <p>Tu guía de programación</p>
+            </div>
+            <button class="dialog-close" id="close-cyber-chat" type="button" aria-label="Cerrar chat">×</button>
+        </header>
+        <div class="cyber-chat-messages" id="cyber-chat-messages" role="log" aria-live="polite" aria-relevant="additions">
+            <p class="cyber-message cyber-message-bot">¡Hola! Puedo explicarte conceptos, darte consejos o ayudarte a elegir una práctica. ¿Qué quieres explorar?</p>
+        </div>
+        <div class="cyber-chat-suggestions" aria-label="Preguntas sugeridas">
+            <button type="button" data-cyber-prompt="Dame un consejo para aprender">Dame un consejo</button>
+            <button type="button" data-cyber-prompt="¿Qué es HTML?">¿Qué es HTML?</button>
+            <button type="button" data-cyber-prompt="Ayúdame a elegir un nivel">Ayúdame con mi nivel</button>
+        </div>
+        <form class="cyber-chat-form" id="cyber-chat-form">
+            <label class="visually-hidden" for="cyber-chat-input">Escribe tu mensaje para Cyber</label>
+            <input id="cyber-chat-input" name="message" type="text" maxlength="240" placeholder="Escribe una pregunta..." autocomplete="off" required>
+            <button class="button button-bright" type="submit" aria-label="Enviar mensaje">Enviar</button>
+        </form>
+        <p class="cyber-chat-note">Cyber responde con una guía local; tus mensajes no se envían a ningún servicio.</p>
+    </dialog>
 
     <dialog class="level-quiz-dialog" id="level-quiz-dialog" aria-labelledby="level-quiz-title">
         <div class="level-quiz-content">

@@ -587,6 +587,10 @@ const levelQuizDialog = document.querySelector('#level-quiz-dialog');
 const levelQuizForm = document.querySelector('#level-quiz-form');
 const levelQuizResult = document.querySelector('#level-quiz-result');
 const welcomeRobot = document.querySelector('#welcome-robot');
+const cyberLauncher = document.querySelector('#reopen-cyber');
+const cyberChatDialog = document.querySelector('#cyber-chat-dialog');
+const cyberChatMessages = document.querySelector('#cyber-chat-messages');
+const cyberChatForm = document.querySelector('#cyber-chat-form');
 
 let levelStorageAvailable = true;
 let levelStorageMessage = '';
@@ -1461,6 +1465,10 @@ function initializeLevelQuiz() {
         levelQuizDialog.close();
     });
 
+    levelQuizDialog.addEventListener('close', () => {
+        welcomeRobot.hidden = false;
+    });
+
     document.querySelector('#retry-level-quiz').addEventListener('click', () => {
         levelQuizForm.reset();
         levelQuizForm.hidden = false;
@@ -1497,6 +1505,158 @@ function initializeLevelQuiz() {
 function initializeWelcomeRobot() {
     document.querySelector('#close-welcome-robot').addEventListener('click', () => {
         welcomeRobot.hidden = true;
+        cyberLauncher.hidden = false;
+    });
+
+    cyberLauncher.addEventListener('click', () => {
+        cyberLauncher.hidden = true;
+        welcomeRobot.hidden = false;
+        document.querySelector('#open-cyber-chat').focus();
+    });
+}
+
+function normalizeCyberMessage(message) {
+    return message.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function getCyberReply(message) {
+    const normalizedMessage = normalizeCyberMessage(message);
+
+    if (normalizedMessage.includes('principiante') || normalizedMessage.includes('intermedio') || normalizedMessage.includes('avanzado')) {
+        const requestedLevel = normalizedMessage.includes('principiante')
+            ? 'beginner'
+            : normalizedMessage.includes('intermedio') ? 'intermediate' : 'advanced';
+        selectLessonLevel(requestedLevel);
+        return { text: `Listo, ya seleccioné el nivel ${requestedLevel === 'beginner' ? 'Principiante' : requestedLevel === 'intermediate' ? 'Intermedio' : 'Avanzado'}. Encontrarás sus cuatro prácticas en la sección Mi ruta.` };
+    }
+
+    if (normalizedMessage.includes('diagnostico') || normalizedMessage.includes('nivel')) {
+        return { text: '¡Vamos a encontrar un buen punto de partida! Abre el diagnóstico de tres preguntas.', action: 'quiz' };
+    }
+
+    if (normalizedMessage.includes('html')) {
+        return { text: 'HTML organiza el contenido de una página: títulos, párrafos, imágenes y botones. Es el mejor lugar para empezar a construir.' };
+    }
+
+    if (normalizedMessage.includes('css') || normalizedMessage.includes('estilo') || normalizedMessage.includes('color')) {
+        return { text: 'CSS controla la apariencia de tu página: colores, tamaños, espacios y distribución. Busca la práctica “Diseña con CSS” en Principiante.' };
+    }
+
+    if (normalizedMessage.includes('javascript') || normalizedMessage.includes('js')) {
+        return { text: 'JavaScript añade lógica e interacción a una página. Puedes comenzar con botones y eventos, y luego practicar funciones, condiciones y bucles.' };
+    }
+
+    if (normalizedMessage.includes('consejo') || normalizedMessage.includes('aprender') || normalizedMessage.includes('empezar') || normalizedMessage.includes('ayuda')) {
+        const tips = {
+            beginner: 'Prueba un cambio pequeño, ejecuta el ejemplo y observa qué ocurrió. Equivocarse es parte de aprender.',
+            intermediate: 'Divide cada reto en pasos y prueba una idea a la vez. Así será más fácil encontrar y corregir errores.',
+            advanced: 'Experimenta modificando el ejemplo y explica con tus palabras por qué funciona. Después intenta resolverlo de otra forma.'
+        };
+        return { text: tips[currentLevel] };
+    }
+
+    if (normalizedMessage.includes('progreso') || normalizedMessage.includes('avance')) {
+        return { text: `Tu curso registra ${progressCount.textContent}. Completa una práctica y su pregunta para avanzar.` };
+    }
+
+    if (normalizedMessage.includes('reto') || normalizedMessage.includes('diario')) {
+        return { text: 'El reto diario tiene cinco preguntas. Puedes abrirlo desde la barra superior y ganar puntos por tus respuestas correctas.', action: 'daily' };
+    }
+
+    if (normalizedMessage.includes('glosario') || normalizedMessage.includes('concepto') || normalizedMessage.includes('definicion')) {
+        return { text: 'En el glosario puedes buscar conceptos de programación y filtrar por tema.', action: 'glossary' };
+    }
+
+    if (normalizedMessage.includes('practica') || normalizedMessage.includes('leccion') || normalizedMessage.includes('ruta')) {
+        return { text: 'Las doce prácticas están organizadas en tres niveles. Te llevo a Mi ruta para que elijas una.', action: 'route' };
+    }
+
+    if (normalizedMessage.includes('proyecto')) {
+        return { text: 'En el Proyecto final construyes un portafolio en cuatro pasos, con editor y vista previa.', action: 'project' };
+    }
+
+    return { text: 'Todavía estoy aprendiendo esa respuesta. Puedo ayudarte con HTML, CSS, JavaScript, consejos, niveles, prácticas, el reto diario o el glosario.' };
+}
+
+function appendCyberMessage(message, sender) {
+    const bubble = document.createElement('p');
+    bubble.className = `cyber-message cyber-message-${sender}`;
+    bubble.textContent = message;
+    cyberChatMessages.append(bubble);
+
+    while (cyberChatMessages.children.length > 24) {
+        cyberChatMessages.firstElementChild.remove();
+    }
+
+    cyberChatMessages.scrollTop = cyberChatMessages.scrollHeight;
+}
+
+function handleCyberMessage(message) {
+    const cleanMessage = message.trim();
+    if (!cleanMessage) {
+        return;
+    }
+
+    appendCyberMessage(cleanMessage, 'user');
+    const reply = getCyberReply(cleanMessage);
+    appendCyberMessage(reply.text, 'bot');
+
+    if (reply.action === 'quiz') {
+        cyberChatDialog.close();
+        welcomeRobot.hidden = true;
+        levelQuizDialog.showModal();
+    } else if (reply.action) {
+        const destinations = {
+            daily: '#reto-diario',
+            glossary: '#glosario',
+            route: '#ruta',
+            project: '#proyecto-final'
+        };
+        cyberChatDialog.close();
+        document.querySelector(destinations[reply.action]).scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function initializeCyberChat() {
+    document.querySelector('#open-cyber-chat').addEventListener('click', () => {
+        welcomeRobot.hidden = true;
+        cyberChatDialog.showModal();
+        document.querySelector('#cyber-chat-input').focus();
+    });
+
+    document.querySelector('#open-cyber-avatar').addEventListener('click', () => {
+        welcomeRobot.hidden = true;
+        cyberChatDialog.showModal();
+        document.querySelector('#cyber-chat-input').focus();
+    });
+
+    document.querySelector('#close-cyber-chat').addEventListener('click', () => {
+        cyberChatDialog.close();
+    });
+
+    cyberChatDialog.addEventListener('close', () => {
+        if (!levelQuizDialog.open) {
+            welcomeRobot.hidden = false;
+        }
+    });
+
+    cyberChatForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const input = document.querySelector('#cyber-chat-input');
+        handleCyberMessage(input.value);
+        input.value = '';
+        if (cyberChatDialog.open) {
+            input.focus();
+        }
+    });
+
+    document.querySelectorAll('[data-cyber-prompt]').forEach((button) => {
+        button.addEventListener('click', () => {
+            handleCyberMessage(button.dataset.cyberPrompt);
+            if (cyberChatDialog.open) {
+                document.querySelector('#cyber-chat-input').focus();
+            }
+        });
     });
 }
 
@@ -1814,6 +1974,7 @@ levelOptions.forEach((button) => {
 });
 initializeLevelQuiz();
 initializeWelcomeRobot();
+initializeCyberChat();
 codeEditor.value = currentLesson.editor;
 runCode();
 initializeDailyGame();
