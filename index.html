@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aprende programación creando proyectos, resolviendo ejercicios y guardando tu progreso.">
+    <meta name="theme-color" content="#17162b">
+    <title>Drian Dev | Aprende programación haciendo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="scroll-progress" id="scroll-progress" role="progressbar" aria-label="Progreso de lectura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+    <div class="code-backdrop" id="code-backdrop" aria-hidden="true"></div>
+    <header class="site-header">
+        <a class="brand" href="#inicio" aria-label="Drian Dev, inicio"><span class="brand-mark">&lt;/&gt;</span> drian<span class="brand-accent">dev</span></a>
+        <nav aria-label="Navegación principal">
+            <a href="#ruta">Mi ruta</a>
+            <a href="#laboratorio">Laboratorio</a>
+        </nav>
+        <button class="account-button" id="account-button" type="button">
+            <span class="account-dot" aria-hidden="true"></span>
+            <span id="account-label">Conectar cuenta</span>
+            <span aria-hidden="true">↗</span>
+        </button>
+    </header>
+
+    <main id="inicio">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="live-label"><span></span> TU AVENTURA COMO PROGRAMADOR EMPIEZA AQUÍ</div>
+                <h1>Menos teoría.<br>Más <span>hacer.</span></h1>
+                <p>Aprende a programar construyendo cosas reales. Explora una lección, cambia el código y mira cómo cobran vida tus ideas.</p>
+                <a class="button button-bright" href="#ruta">Continuar aprendiendo <span aria-hidden="true">↓</span></a>
+                <div class="hero-note"><span aria-hidden="true">✳</span> A tu ritmo · Desde cero · Aprendiendo haciendo</div>
+            </div>
+            <div class="hero-visual" aria-label="Ilustración de un monstruo amigable con código">
+                <div class="visual-orbit orbit-one"></div>
+                <div class="visual-orbit orbit-two"></div>
+                <div class="visual-code code-top"><span>01</span> const idea = "posible";</div>
+                <img src="img/monster.png" alt="Monstruo amigable aprendiendo programación">
+                <div class="visual-code code-bottom"><span>02</span> aprende(); <b>↗</b></div>
+                <div class="visual-spark spark-one">✳</div>
+                <div class="visual-spark spark-two">✦</div>
+            </div>
+        </section>
+
+        <section class="progress-strip" aria-label="Tu progreso de aprendizaje">
+            <div class="progress-intro">
+                <span class="progress-icon" aria-hidden="true">✦</span>
+                <div><strong>Tu progreso</strong><span id="progress-caption">Conecta tu cuenta para guardar lo que aprendes</span></div>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="Progreso del curso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <span id="progress-bar"></span>
+            </div>
+            <strong class="progress-percent" id="progress-percent">0%</strong>
+            <span class="progress-count" id="progress-count">0 / 24 actividades</span>
+        </section>
+
+        <section class="learning-section" id="ruta">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">TU PRÓXIMO PASO</p>
+                    <h2>12 prácticas. Un montón de posibilidades.</h2>
+                </div>
+                <span class="level-pill"><span aria-hidden="true">◉</span> NIVEL PRINCIPIANTE</span>
+            </div>
+
+            <div class="lesson-layout">
+                <div class="lesson-list" id="lesson-list" aria-label="Lecciones disponibles"></div>
+                <article class="lesson-panel" id="lesson-panel" aria-live="polite">
+                    <div class="lesson-panel-content">
+                        <div class="lesson-meta"><span id="lesson-tag">LECCIÓN 01</span><span>5 MIN</span></div>
+                        <h3 id="lesson-title">Elige una lección para comenzar</h3>
+                        <p id="lesson-description">Aprende los fundamentos de la programación web con ejemplos sencillos y ejercicios prácticos.</p>
+                        <div class="lesson-concept" id="lesson-concept"></div>
+                        <div class="practice-challenge">
+                            <div class="challenge-title"><span aria-hidden="true">⚡</span><strong>Tu práctica</strong></div>
+                            <p id="practice-challenge"></p>
+                            <div class="challenge-actions">
+                                <button class="hint-button" id="show-hint" type="button" aria-expanded="false" aria-controls="practice-hint">Mostrar una pista</button>
+                                <button class="hint-button" id="open-lab" type="button">Probar en el editor ↓</button>
+                            </div>
+                            <p class="practice-hint" id="practice-hint" hidden></p>
+                        </div>
+                        <div class="quiz-box" id="quiz-box"></div>
+                        <button class="button button-bright lesson-complete" id="complete-lesson" type="button">Marcar lección como completada <span aria-hidden="true">✓</span></button>
+                        <p class="lesson-status" id="lesson-status" role="status" aria-live="polite"></p>
+                    </div>
+                    <div class="lesson-mascot" aria-hidden="true">✳</div>
+                </article>
+            </div>
+        </section>
+
+        <section class="lab-section" id="laboratorio">
+            <div class="lab-heading">
+                <div>
+                    <p class="eyebrow">PRUEBA, ROMPE, APRENDE</p>
+                    <h2>Tu laboratorio de código<span>.</span></h2>
+                    <p>Edita el ejemplo. Ejecuta tu código. ¡No hay una forma incorrecta de experimentar!</p>
+                </div>
+                <span class="lab-status"><span></span> ENTORNO LISTO</span>
+            </div>
+            <div class="playground">
+                <div class="editor-panel">
+                    <div class="panel-topline">
+                        <label for="code-editor"><span class="file-icon" aria-hidden="true">▤</span> <span id="editor-filename">mi-primer-sitio.html</span></label>
+                        <span class="language-badge">HTML + CSS + JS</span>
+                    </div>
+                    <textarea id="code-editor" aria-label="Editor de código HTML" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+                    <div class="editor-actions">
+                        <button class="button button-bright" id="run-code" type="button"><span aria-hidden="true">▶</span> Ejecutar</button>
+                        <button class="button button-quiet" id="reset-code" type="button">Restablecer ejemplo</button>
+                        <span class="editor-message" id="editor-message" role="status" aria-live="polite"></span>
+                    </div>
+                </div>
+                <div class="preview-panel">
+                    <div class="panel-topline">
+                        <h3><span class="preview-dot" aria-hidden="true"></span> Vista previa</h3>
+                        <span class="preview-caption">TU RESULTADO</span>
+                    </div>
+                    <iframe id="code-preview" title="Vista previa del código" sandbox="allow-scripts"></iframe>
+                </div>
+            </div>
+            <div class="lab-tip"><span aria-hidden="true">💡</span><p><strong>Tip de programador:</strong> cambia el texto o los colores, ejecuta el código y observa qué pasa. ¡Así se aprende!</p></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a class="brand" href="#inicio"><span class="brand-mark">&lt;/&gt;</span> drian<span class="brand-accent">dev</span></a>
+        <p>Hecho para aprender. Construido con curiosidad <span aria-label="amor">♥</span></p>
+        <a href="#inicio">Volver arriba ↑</a>
+    </footer>
+
+    <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+        <form class="auth-form" id="auth-form">
+            <button class="dialog-close" id="close-auth" type="button" aria-label="Cerrar">×</button>
+            <div class="dialog-mark" aria-hidden="true">&lt;/&gt;</div>
+            <p class="eyebrow">TU PROGRESO, CONTIGO</p>
+            <h2 id="auth-title">Guarda tu camino.</h2>
+            <p class="auth-description">Crea una cuenta gratis para retomar tus lecciones desde cualquier dispositivo.</p>
+            <label for="auth-email">Correo electrónico</label>
+            <input id="auth-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" required>
+            <label for="auth-password">Contraseña</label>
+            <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="Al menos 6 caracteres" required>
+            <button class="button button-bright auth-submit" id="auth-submit" type="submit">Iniciar sesión</button>
+            <button class="auth-toggle" id="auth-toggle" type="button">¿No tienes cuenta? <strong>Crear una</strong></button>
+            <p class="auth-message" id="auth-message" role="status" aria-live="polite"></p>
+        </form>
+    </dialog>
+</body>
+</html>
