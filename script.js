@@ -271,6 +271,162 @@ const dailyQuizQuestions = [
 const dailyQuizStorageKey = 'drian-dev-daily-quiz-v1';
 const dailyQuizLength = 5;
 
+const projectStorageKey = 'drian-dev-guided-project-v1';
+const projectStages = [
+    {
+        id: 'structure',
+        title: 'Prepara la estructura',
+        description: 'Empieza con HTML semántico. El encabezado presenta tu sitio y main contiene su contenido principal.',
+        guide: 'Una página clara tiene partes con un propósito: header, main y footer.',
+        checklist: [
+            { label: 'Crea y cierra un encabezado con header.', pattern: /<header(?:\s[^>]*)?>[\s\S]*?<\/header\s*>/i },
+            { label: 'Organiza el contenido dentro de main.', pattern: /<main(?:\s[^>]*)?>[\s\S]*?<\/main\s*>/i },
+            { label: 'Añade un título principal h1.', pattern: /<h1(?:\s[^>]*)?>[\s\S]*?<\/h1\s*>/i },
+            { label: 'Cierra la página con footer.', pattern: /<footer(?:\s[^>]*)?>[\s\S]*?<\/footer\s*>/i }
+        ],
+        code: `<header>
+  <p>MI PORTAFOLIO</p>
+</header>
+<main>
+  <h1>Hola, soy Alex</h1>
+  <p>Me gusta aprender y crear cosas nuevas.</p>
+</main>
+<footer>
+  <p>Creado por mí, con curiosidad.</p>
+</footer>`
+    },
+    {
+        id: 'design',
+        title: 'Dale estilo con CSS',
+        description: 'Agrega una hoja de estilos para elegir colores y darle a la sección principal una apariencia de tarjeta.',
+        guide: 'Puedes cambiar cualquier valor: experimenta con los colores y el radio del borde.',
+        checklist: [
+            { label: 'Incluye una etiqueta style.', pattern: /<style(?:\s|>)/i },
+            { label: 'Usa la propiedad background o background-color.', pattern: /background(?:-color)?\s*:/i },
+            { label: 'Redondea un borde con border-radius.', pattern: /border-radius\s*:/i }
+        ],
+        code: `<header>
+  <p>MI PORTAFOLIO</p>
+</header>
+<main>
+  <h1>Hola, soy Alex</h1>
+  <p>Me gusta aprender y crear cosas nuevas.</p>
+</main>
+<footer>
+  <p>Creado por mí, con curiosidad.</p>
+</footer>
+
+<style>
+  body {
+    margin: 0;
+    padding: 32px;
+    background: #eeeaff;
+    color: #282344;
+    font-family: sans-serif;
+  }
+  main {
+    max-width: 560px;
+    padding: 28px;
+    border-radius: 20px;
+    background-color: white;
+  }
+  footer { margin-top: 24px; }
+</style>`
+    },
+    {
+        id: 'interaction',
+        title: 'Agrega una interacción',
+        description: 'Haz que un botón responda cuando alguien lo pulse. JavaScript puede cambiar el mensaje de tu portafolio.',
+        guide: 'El botón tiene el id boton y el texto que cambiará vive en el párrafo con id mensaje.',
+        checklist: [
+            { label: 'Crea un botón con id boton.', pattern: /<button[^>]*\bid=["']boton["']/i },
+            { label: 'Añade un párrafo con id mensaje.', pattern: /<p[^>]*\bid=["']mensaje["']/i },
+            { label: 'Escucha el clic con addEventListener.', pattern: /addEventListener\s*\(\s*['"]click['"]/i },
+            { label: 'Actualiza el texto con textContent.', pattern: /\.textContent\s*=/i }
+        ],
+        code: `<header>
+  <p>MI PORTAFOLIO</p>
+</header>
+<main>
+  <h1>Hola, soy Alex</h1>
+  <p>Me gusta aprender y crear cosas nuevas.</p>
+  <p id="mensaje">¡Gracias por visitar mi página!</p>
+  <button id="boton" type="button">Saludar</button>
+</main>
+<footer>
+  <p>Creado por mí, con curiosidad.</p>
+</footer>
+
+<style>
+  body { margin: 0; padding: 32px; background: #eeeaff; color: #282344; font-family: sans-serif; }
+  main { max-width: 560px; padding: 28px; border-radius: 20px; background: white; }
+  footer { margin-top: 24px; }
+  button { padding: 10px 16px; border: 0; border-radius: 9px; background: #7258e8; color: white; cursor: pointer; }
+</style>
+
+<script>
+  document.querySelector("#boton").addEventListener("click", () => {
+    document.querySelector("#mensaje").textContent = "¡Hola! Gracias por pasar por aquí.";
+  });
+</script>`
+    },
+    {
+        id: 'ideas',
+        title: 'Crea una lista interactiva',
+        description: 'Completa tu portafolio con una lista de proyectos. Escribe una idea y agrégala con JavaScript.',
+        guide: 'Prueba escribiendo el nombre de un proyecto y pulsando Agregar idea.',
+        checklist: [
+            { label: 'Agrega un campo de texto con id idea.', pattern: /<input[^>]*\bid=["']idea["']/i },
+            { label: 'Incluye una lista con id lista-ideas.', pattern: /<(?:ul|ol)[^>]*\bid=["']lista-ideas["']/i },
+            { label: 'Escucha el botón agregar con addEventListener.', pattern: /querySelector\s*\(\s*['"]#agregar['"]\s*\)\s*\.addEventListener\s*\(\s*['"]click['"]/i },
+            { label: 'Crea elementos y añádelos a la lista.', pattern: /createElement\s*\(\s*['"]li['"]\s*\)[\s\S]*?\.append\s*\(/i }
+        ],
+        code: `<header>
+  <p>MI PORTAFOLIO</p>
+</header>
+<main>
+  <h1>Hola, soy Alex</h1>
+  <p>Me gusta aprender y crear cosas nuevas.</p>
+  <p id="mensaje">¡Gracias por visitar mi página!</p>
+  <button id="boton" type="button">Saludar</button>
+
+  <h2>Mis próximas ideas</h2>
+  <label for="idea">Nuevo proyecto</label>
+  <input id="idea" placeholder="Por ejemplo: un juego">
+  <button id="agregar" type="button">Agregar idea</button>
+  <ul id="lista-ideas"></ul>
+</main>
+<footer>
+  <p>Creado por mí, con curiosidad.</p>
+</footer>
+
+<style>
+  body { margin: 0; padding: 32px; background: #eeeaff; color: #282344; font-family: sans-serif; }
+  main { max-width: 560px; padding: 28px; border-radius: 20px; background: white; }
+  footer { margin-top: 24px; }
+  button, input { margin: 5px 4px 5px 0; padding: 10px 12px; border: 0; border-radius: 9px; }
+  button { background: #7258e8; color: white; cursor: pointer; }
+  li { margin: 8px 0; }
+</style>
+
+<script>
+  document.querySelector("#boton").addEventListener("click", () => {
+    document.querySelector("#mensaje").textContent = "¡Hola! Gracias por pasar por aquí.";
+  });
+
+  document.querySelector("#agregar").addEventListener("click", () => {
+    const campo = document.querySelector("#idea");
+    const texto = campo.value.trim();
+    if (!texto) return;
+    const elemento = document.createElement("li");
+    elemento.textContent = texto;
+    document.querySelector("#lista-ideas").append(elemento);
+    campo.value = "";
+  });
+</script>`
+    }
+];
+
 const form = document.querySelector('#auth-form');
 const authDialog = document.querySelector('#auth-dialog');
 const authMessage = document.querySelector('#auth-message');
@@ -302,6 +458,9 @@ let supabaseClient = null;
 let dailyGame;
 let dailyStorageAvailable = true;
 let dailyStorageMessage = '';
+let projectState;
+let projectStorageAvailable = true;
+let projectStorageMessage = '';
 
 function setAuthMessage(message, isError = false) {
     authMessage.textContent = message;
@@ -692,6 +851,175 @@ function initializeDailyGame() {
         renderDailyGame();
     });
     renderDailyGame();
+}
+
+function readProjectState() {
+    let savedProject;
+    try {
+        const storedProject = localStorage.getItem(projectStorageKey);
+        savedProject = storedProject ? JSON.parse(storedProject) : null;
+    } catch (error) {
+        console.error('No se pudo leer el proyecto guardado:', error);
+        projectStorageMessage = 'No se pudo leer el borrador guardado; empieza con el primer paso.';
+    }
+
+    const validStageIds = new Set(projectStages.map((stage) => stage.id));
+    const savedDrafts = savedProject?.drafts && typeof savedProject.drafts === 'object'
+        ? savedProject.drafts
+        : {};
+    const drafts = Object.fromEntries(projectStages.map((stage) => [
+        stage.id,
+        typeof savedDrafts[stage.id] === 'string' && savedDrafts[stage.id].length <= 50000
+            ? savedDrafts[stage.id]
+            : stage.code
+    ]));
+    const savedCompleted = Array.isArray(savedProject?.completedSteps)
+        ? savedProject.completedSteps.filter((id) => validStageIds.has(id))
+        : [];
+    const completedSteps = [];
+    for (const stage of projectStages) {
+        if (!savedCompleted.includes(stage.id) || stage.checklist.some((item) => !item.pattern.test(drafts[stage.id]))) {
+            break;
+        }
+        completedSteps.push(stage.id);
+    }
+    const savedActiveStage = projectStages.find((stage) => stage.id === savedProject?.activeStage);
+    const nextUnlocked = projectStages[Math.min(completedSteps.length, projectStages.length - 1)];
+
+    return {
+        drafts,
+        completedSteps,
+        activeStage: savedActiveStage && projectStages.indexOf(savedActiveStage) <= projectStages.indexOf(nextUnlocked)
+            ? savedActiveStage.id
+            : nextUnlocked.id
+    };
+}
+
+function saveProjectState() {
+    if (!projectStorageAvailable) {
+        return;
+    }
+
+    try {
+        localStorage.setItem(projectStorageKey, JSON.stringify(projectState));
+    } catch (error) {
+        console.error('No se pudo guardar el proyecto:', error);
+        projectStorageAvailable = false;
+        projectStorageMessage = 'No se pudo guardar el proyecto en este navegador.';
+        document.querySelector('#project-stage-status').textContent = projectStorageMessage;
+    }
+}
+
+function renderProjectStage(status = '') {
+    const activeIndex = projectStages.findIndex((stage) => stage.id === projectState.activeStage);
+    const stage = projectStages[activeIndex];
+    const editor = document.querySelector('#project-editor');
+    const preview = document.querySelector('#project-preview');
+    const unlockedIndex = Math.min(projectState.completedSteps.length, projectStages.length - 1);
+
+    document.querySelector('#project-progress').textContent = `${projectState.completedSteps.length} DE ${projectStages.length} PASOS`;
+    document.querySelector('#project-stage-label').textContent = `PASO ${activeIndex + 1} DE ${projectStages.length}`;
+    document.querySelector('#project-stage-title').textContent = stage.title;
+    document.querySelector('#project-stage-description').textContent = stage.description;
+    document.querySelector('#project-guide-text').textContent = stage.guide;
+    document.querySelector('#project-stage-status').textContent = status || projectStorageMessage;
+    document.querySelector('#project-checklist').replaceChildren(...stage.checklist.map((item) => {
+        const checklistItem = document.createElement('li');
+        checklistItem.textContent = item.label;
+        return checklistItem;
+    }));
+    editor.value = projectState.drafts[stage.id];
+    preview.srcdoc = editor.value;
+
+    const stepList = document.querySelector('#project-step-list');
+    stepList.replaceChildren(...projectStages.map((step, index) => {
+        const button = document.createElement('button');
+        const number = document.createElement('span');
+        const copy = document.createElement('span');
+        const title = document.createElement('strong');
+        const state = document.createElement('span');
+        const isComplete = projectState.completedSteps.includes(step.id);
+
+        button.className = 'project-step';
+        button.type = 'button';
+        button.disabled = index > unlockedIndex;
+        button.setAttribute('aria-current', step.id === stage.id ? 'step' : 'false');
+        number.className = 'project-step-number';
+        number.textContent = isComplete ? '✓' : String(index + 1).padStart(2, '0');
+        copy.className = 'project-step-copy';
+        title.textContent = step.title;
+        state.textContent = isComplete ? 'Paso completado' : `Paso ${index + 1}`;
+        copy.append(title, state);
+        button.append(number, copy);
+        button.addEventListener('click', () => {
+            projectState.activeStage = step.id;
+            saveProjectState();
+            renderProjectStage();
+        });
+        return button;
+    }));
+
+    if (projectState.completedSteps.length === projectStages.length) {
+        document.querySelector('#project-progress').textContent = 'PROYECTO COMPLETADO';
+    }
+}
+
+function initializeGuidedProject() {
+    projectState = readProjectState();
+    const editor = document.querySelector('#project-editor');
+    const preview = document.querySelector('#project-preview');
+
+    editor.addEventListener('input', () => {
+        const stageIndex = projectStages.findIndex((stage) => stage.id === projectState.activeStage);
+        const stage = projectStages[stageIndex];
+        projectState.drafts[stage.id] = editor.value;
+
+        if (projectState.completedSteps.includes(stage.id) && stage.checklist.some((item) => !item.pattern.test(editor.value))) {
+            projectState.completedSteps = projectState.completedSteps.slice(0, stageIndex);
+            projectState.activeStage = stage.id;
+        }
+
+        saveProjectState();
+        renderProjectStage();
+    });
+    editor.addEventListener('keydown', (event) => {
+        if (event.key === 'Tab') {
+            event.preventDefault();
+            editor.setRangeText('  ', editor.selectionStart, editor.selectionEnd, 'end');
+            editor.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    });
+    document.querySelector('#project-run').addEventListener('click', () => {
+        projectState.drafts[projectState.activeStage] = editor.value;
+        preview.srcdoc = editor.value;
+        saveProjectState();
+        document.querySelector('#project-stage-status').textContent = 'Vista previa actualizada. ¡Sigue probando!';
+        playEffect(preview, 'project-preview-run');
+    });
+    document.querySelector('#project-check').addEventListener('click', () => {
+        const stageIndex = projectStages.findIndex((stage) => stage.id === projectState.activeStage);
+        const stage = projectStages[stageIndex];
+        projectState.drafts[stage.id] = editor.value;
+        const missingItems = stage.checklist.filter((item) => !item.pattern.test(editor.value));
+
+        if (missingItems.length > 0) {
+            document.querySelector('#project-stage-status').textContent = `Revisa tu código: ${missingItems.map((item) => item.label).join(' ')}`;
+            saveProjectState();
+            return;
+        }
+
+        if (!projectState.completedSteps.includes(stage.id)) {
+            projectState.completedSteps.push(stage.id);
+        }
+        projectState.activeStage = projectStages[Math.min(stageIndex + 1, projectStages.length - 1)].id;
+        saveProjectState();
+        renderProjectStage(stageIndex === projectStages.length - 1
+            ? '¡Proyecto terminado! Puedes seguir editando y personalizando tu página.'
+            : '¡Paso completado! Ya puedes avanzar al siguiente.');
+        playEffect(document.querySelector('.project-workbench'), 'feedback-correct');
+    });
+
+    renderProjectStage();
 }
 
 function renderProgress() {
@@ -1129,7 +1457,7 @@ if ('IntersectionObserver' in window) {
         });
     }, { threshold: 0.12 });
 
-    document.querySelectorAll('.progress-strip, .daily-quiz-section, .learning-section, .lab-section').forEach((section) => {
+    document.querySelectorAll('.progress-strip, .daily-quiz-section, .project-section, .learning-section, .lab-section').forEach((section) => {
         section.classList.add('scroll-reveal');
         revealObserver.observe(section);
     });
@@ -1141,6 +1469,7 @@ renderLesson();
 codeEditor.value = currentLesson.editor;
 runCode();
 initializeDailyGame();
+initializeGuidedProject();
 initializeSupabase();
 initializeMovementEffects();
 initializeCodeBackdrop();

@@ -1074,6 +1074,240 @@ textarea:focus-visible {
         #1c1b31;
 }
 
+.project-section {
+    width: min(1160px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 82px 0 88px;
+}
+
+.project-section .lab-heading {
+    align-items: center;
+}
+
+.project-progress-pill {
+    color: var(--lime);
+}
+
+.project-workbench {
+    display: grid;
+    grid-template-columns: 265px minmax(0, 1fr);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: #1d1c32;
+}
+
+.project-steps {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 22px 17px;
+    border-right: 1px solid var(--line);
+    background: rgb(255 255 255 / 2%);
+}
+
+.project-steps-label,
+.project-stage-label {
+    margin: 0;
+    color: var(--lime);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.project-steps-label {
+    margin: 2px 8px 14px;
+}
+
+.project-step-list {
+    display: grid;
+    gap: 8px;
+}
+
+.project-step {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 9px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+.project-step[aria-current="step"] {
+    border-color: rgb(155 134 255 / 35%);
+    background: rgb(155 134 255 / 9%);
+}
+
+.project-step:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.project-step:not(:disabled):hover {
+    background: rgb(155 134 255 / 9%);
+}
+
+.project-step:focus-visible,
+.project-editor:focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 2px;
+}
+
+.project-step-number {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 10px;
+    background: #292741;
+    color: #c6bcff;
+    font-family: 'DM Mono', Consolas, monospace;
+    font-size: 0.76rem;
+}
+
+.project-step[aria-current="step"] .project-step-number {
+    background: rgb(155 134 255 / 18%);
+    color: var(--lime);
+}
+
+.project-step-copy {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+}
+
+.project-step-copy strong {
+    font-size: 0.77rem;
+}
+
+.project-step-copy > span {
+    color: var(--muted);
+    font-size: 0.67rem;
+}
+
+.project-guide {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-top: auto;
+    padding: 12px 10px 0;
+    color: var(--muted);
+}
+
+.project-guide > span {
+    flex: 0 0 auto;
+}
+
+.project-guide p {
+    margin: 0;
+    font-size: 0.73rem;
+    line-height: 1.6;
+}
+
+.project-editor-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 23px;
+}
+
+.project-stage-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.project-stage-heading h3 {
+    margin: 5px 0 0;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.2rem;
+}
+
+.project-stage-status {
+    max-width: 57%;
+    color: var(--lime);
+    font-size: 0.72rem;
+    text-align: right;
+}
+
+.project-stage-description {
+    margin: 10px 0 12px;
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+.project-checklist {
+    display: grid;
+    gap: 5px;
+    margin: 0 0 17px;
+    padding-left: 19px;
+    color: #ccc9dc;
+    font-size: 0.75rem;
+}
+
+.project-checklist li::marker {
+    color: var(--purple);
+}
+
+.project-editor-label {
+    margin-bottom: 7px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.project-editor {
+    display: block;
+    width: 100%;
+    min-height: 310px;
+    padding: 14px;
+    border: 1px solid #35324e;
+    border-radius: 9px;
+    background: #131221;
+    color: #e9e5ff;
+    font: 0.78rem/1.7 'DM Mono', Consolas, monospace;
+    resize: vertical;
+    tab-size: 2;
+}
+
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin: 11px 0 14px;
+}
+
+.project-actions .button {
+    min-height: 38px;
+    padding: 0 13px;
+    font-size: 0.78rem;
+}
+
+.project-preview {
+    display: block;
+    width: 100%;
+    min-height: 260px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: white;
+    transform-origin: center;
+}
+
+.project-workbench.feedback-correct {
+    animation: feedback-correct 420ms ease both;
+}
+
+.project-preview.project-preview-run {
+    animation: preview-run 350ms ease both;
+}
+
 .lab-heading {
     width: min(1160px, 100%);
     margin: 0 auto 25px;
@@ -1570,6 +1804,7 @@ textarea:focus-visible {
     .hero,
     .progress-strip,
     .daily-quiz-section,
+    .project-section,
     .learning-section,
     .site-footer {
         width: calc(100% - 40px);
@@ -1601,6 +1836,14 @@ textarea:focus-visible {
 
     .daily-quiz-aside {
         padding: 20px;
+    }
+
+    .project-workbench {
+        grid-template-columns: 220px minmax(0, 1fr);
+    }
+
+    .project-editor-panel {
+        padding: 18px;
     }
 
     .lesson-layout {
@@ -1638,6 +1881,7 @@ textarea:focus-visible {
     .hero,
     .progress-strip,
     .daily-quiz-section,
+    .project-section,
     .learning-section,
     .site-footer {
         width: calc(100% - 32px);
@@ -1723,6 +1967,64 @@ textarea:focus-visible {
         padding: 18px 21px;
         border-top: 1px solid var(--line);
         border-left: 0;
+    }
+
+    .project-section {
+        padding: 60px 0;
+    }
+
+    .project-workbench {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .project-steps {
+        padding: 15px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .project-step-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .project-step {
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 7px;
+        padding: 8px 5px;
+    }
+
+    .project-step-number {
+        width: 28px;
+        height: 28px;
+    }
+
+    .project-step-copy strong {
+        font-size: 0.68rem;
+    }
+
+    .project-guide {
+        margin-top: 12px;
+        padding: 9px 5px 0;
+    }
+
+    .project-editor-panel {
+        padding: 17px;
+    }
+
+    .project-stage-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .project-stage-status {
+        max-width: none;
+        text-align: left;
+    }
+
+    .project-editor,
+    .project-preview {
+        min-height: 260px;
     }
 
     .daily-flame {
@@ -1822,6 +2124,7 @@ textarea:focus-visible {
     .hero,
     .progress-strip,
     .daily-quiz-section,
+    .project-section,
     .learning-section,
     .site-footer {
         width: calc(100% - 24px);
@@ -1837,8 +2140,16 @@ textarea:focus-visible {
     }
 
     nav {
-        gap: 6px;
-        font-size: 0.62rem;
+        width: calc(100vw - 230px);
+        overflow-x: auto;
+        gap: 10px;
+        font-size: 0.66rem;
+        scrollbar-width: none;
+        white-space: nowrap;
+    }
+
+    nav::-webkit-scrollbar {
+        display: none;
     }
 
     .account-button {

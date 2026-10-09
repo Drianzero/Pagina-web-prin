@@ -1,6 +1,6 @@
 # Drian Dev
 
-Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas, preguntas, pistas, un editor de código, una vista previa y un reto diario de cinco preguntas con puntos y racha. El reto diario se guarda localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
+Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas, preguntas, pistas, un editor de código, una vista previa, un reto diario de cinco preguntas con puntos y racha y un proyecto final guiado de cuatro pasos. El reto diario y el borrador del proyecto se guardan localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
 
 ## Probar la página
 
@@ -22,6 +22,10 @@ Sin Supabase configurado, las lecciones y el editor se pueden probar, pero el pr
 ## Reto diario
 
 Cada día se seleccionan cinco preguntas de programación. Cada respuesta correcta suma diez puntos; al completar el reto se actualiza la racha de días consecutivos. Los puntos y la racha se conservan en el almacenamiento local del navegador y no se sincronizan entre dispositivos ni con la cuenta de Supabase.
+
+## Proyecto final guiado
+
+En **Proyecto final** construye un portafolio paso a paso: estructura HTML, estilos CSS, una interacción con JavaScript y una lista interactiva de ideas. El taller comprueba los elementos clave de cada paso, ejecuta el código en una vista previa aislada y guarda el borrador en el navegador. Los pasos, el código y el progreso no se sincronizan entre dispositivos ni con Supabase.
 
 ## Publicar y compartir con GitHub Pages
 

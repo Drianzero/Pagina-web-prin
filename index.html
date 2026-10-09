@@ -22,6 +22,7 @@
         <nav aria-label="Navegación principal">
             <a href="#ruta">Mi ruta</a>
             <a href="#reto-diario">Reto diario</a>
+            <a href="#proyecto-final">Proyecto final</a>
             <a href="#laboratorio">Laboratorio</a>
         </nav>
         <button class="account-button" id="account-button" type="button">
@@ -135,6 +136,45 @@
                     </div>
                     <div class="lesson-mascot" aria-hidden="true">✳</div>
                 </article>
+            </div>
+        </section>
+
+        <section class="project-section" id="proyecto-final" aria-labelledby="project-title">
+            <div class="lab-heading">
+                <div>
+                    <p class="eyebrow">TU PRIMER SITIO WEB COMPLETO</p>
+                    <h2 id="project-title">Proyecto final guiado<span>.</span></h2>
+                    <p>Construye un pequeño portafolio paso a paso y prueba cada idea en la vista previa.</p>
+                </div>
+                <span class="level-pill project-progress-pill" id="project-progress">0 DE 4 PASOS</span>
+            </div>
+            <div class="project-workbench">
+                <aside class="project-steps" aria-label="Pasos del proyecto">
+                    <p class="project-steps-label">TU CAMINO</p>
+                    <div class="project-step-list" id="project-step-list"></div>
+                    <div class="project-guide">
+                        <span aria-hidden="true">💡</span>
+                        <p id="project-guide-text">Cada paso incluye un ejemplo editable. Personalízalo, ejecútalo y comprueba lo que aprendiste.</p>
+                    </div>
+                </aside>
+                <div class="project-editor-panel">
+                    <div class="project-stage-heading">
+                        <div>
+                            <span class="project-stage-label" id="project-stage-label">PASO 1 DE 4</span>
+                            <h3 id="project-stage-title">Prepara la estructura</h3>
+                        </div>
+                        <span class="project-stage-status" id="project-stage-status" role="status" aria-live="polite"></span>
+                    </div>
+                    <p class="project-stage-description" id="project-stage-description"></p>
+                    <ul class="project-checklist" id="project-checklist"></ul>
+                    <label class="project-editor-label" for="project-editor">Tu código HTML, CSS y JavaScript</label>
+                    <textarea class="project-editor" id="project-editor" aria-label="Editor del proyecto final" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+                    <div class="project-actions">
+                        <button class="button button-bright" id="project-run" type="button"><span aria-hidden="true">▶</span> Probar mi página</button>
+                        <button class="button button-quiet" id="project-check" type="button">Comprobar paso</button>
+                    </div>
+                    <iframe class="project-preview" id="project-preview" title="Vista previa del proyecto final" sandbox="allow-scripts"></iframe>
+                </div>
             </div>
         </section>
 
