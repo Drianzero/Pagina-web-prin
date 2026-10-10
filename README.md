@@ -1,6 +1,6 @@
 # Drian Dev
 
-Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas organizadas en tres niveles seleccionables de cuatro prácticas cada uno (principiante, intermedio y avanzado), un diagnóstico opcional que recomienda un nivel, preguntas, pistas, un editor de código, una vista previa, un reto diario de cinco preguntas con puntos y racha, un proyecto final guiado de cuatro pasos y un glosario con búsqueda y filtros por tema. Cyber, el robot guía, saluda al entrar y ofrece un chat local con consejos de programación y accesos a las prácticas y al diagnóstico; los mensajes no se envían a servicios externos. El nivel elegido, el reto diario y el borrador del proyecto se guardan localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
+Sitio estático para aprender HTML, CSS y JavaScript con doce prácticas interactivas organizadas en tres niveles seleccionables de cuatro prácticas cada uno (principiante, intermedio y avanzado), un diagnóstico opcional que recomienda un nivel, preguntas, pistas, un editor de código, una vista previa, un reto diario de cinco preguntas con puntos y racha, un proyecto final guiado de cuatro pasos y un glosario con búsqueda y filtros por tema. Cyber, el robot guía, saluda al entrar y ofrece un chat de programación. Sin Supabase configurado, siguen disponibles sus comandos, un reto interactivo y definiciones básicas; las preguntas abiertas requieren OpenAI mediante la función segura de Supabase. Cuando se activa, las preguntas se envían a OpenAI y la función solicita que las respuestas no se almacenen (`store: false`). El chat no se guarda en esta página. No envíes contraseñas ni otros datos privados. Las respuestas son orientativas y pueden contener errores, por lo que conviene comprobar el código antes de usarlo. El nivel elegido, el reto diario y el borrador del proyecto se guardan localmente en el navegador. Incluye líneas de código animadas en el fondo, movimiento sutil que responde al cursor y una guía de desplazamiento; los efectos respetan la preferencia de movimiento reducido del dispositivo. Las cuentas y el progreso entre dispositivos se guardan en Supabase.
 
 ## Probar la página
 
@@ -18,6 +18,26 @@ Abre esta carpeta en VS Code y ejecuta `index.html` con una extensión de servid
 La URL del proyecto y la clave `publishable`/`anon` están diseñadas para usarse en el navegador. **Nunca** pongas una clave `secret` o `service_role` en este sitio ni en GitHub: esas claves dan acceso administrativo. No cambies ni elimines las políticas RLS del esquema.
 
 Sin Supabase configurado, las lecciones y el editor se pueden probar, pero el progreso solo permanece temporalmente mientras la página siga abierta.
+
+## Activar el chat de Cyber
+
+Cyber puede explicar código y conceptos, proponer retos, navegar a las secciones del curso y recomendar un nivel. Sin Supabase conectado, responde localmente preguntas básicas sobre HTML, CSS, JavaScript, Python, Java, Git, variables, funciones, arrays, bucles y condiciones, y permite probar un reto interactivo de operadores. Para preguntas abiertas necesita una función Edge de Supabase y una clave de OpenAI guardada únicamente como secreto del servidor. El chat también permite copiar o escuchar sus respuestas, borrar la conversación y enviar con `Ctrl + Enter`. GitHub Pages publica el sitio, pero no despliega esta función.
+
+1. Instala [Supabase CLI](https://supabase.com/docs/guides/cli) e inicia sesión con `supabase login`.
+2. En una terminal, cambia a esta carpeta (`HTML.INTRO`) y enlázala a tu proyecto: `supabase link --project-ref TU_PROJECT_REF`. El identificador está en la URL de tu proyecto Supabase.
+3. Ejecuta [`supabase-schema.sql`](./supabase-schema.sql) en el **SQL Editor** de Supabase, también si ya ejecutaste el esquema anteriormente. La función de Cyber depende de la tabla de límite de uso y del RPC incluidos al final del archivo.
+4. En tu cuenta de OpenAI, crea una API key. No la pegues en el sitio, en `supabase-config.js`, en GitHub ni en este chat. Guárdala como secreto desde **Supabase Dashboard → Edge Functions → Secrets**. Si prefieres CLI, usa `supabase secrets set --env-file RUTA_A_UN_ARCHIVO_PRIVADO`; crea ese archivo fuera del repositorio y no lo subas a GitHub.
+5. Configura los orígenes permitidos del navegador. Sustituye el ejemplo por el origen exacto que sirve tu página (solo esquema, dominio y puerto; sin ruta final). Incluye el origen local que uses para desarrollo:
+
+   ```sh
+   supabase secrets set ALLOWED_ORIGINS=https://TU-USUARIO.github.io,http://127.0.0.1:5500
+   ```
+
+   Si usas un dominio propio o un puerto local distinto, ajusta la lista. No incluyas rutas como `/REPOSITORIO/`. El servidor rechaza los demás orígenes.
+6. Despliega la función desde la carpeta `HTML.INTRO`: `supabase functions deploy cyber-chat`. La opción `verify_jwt = false` es necesaria porque la web admite visitantes sin cuenta; la función valida el origen, limita la entrada y aplica un máximo de 12 solicitudes por minuto y dirección IP.
+7. Completa la URL y la clave pública `anon` en [`supabase-config.js`](./supabase-config.js), publica el sitio y prueba Cyber. No uses la clave `service_role` en el cliente; la función la recibe automáticamente en el entorno seguro de Supabase.
+
+La función usa `gpt-4.1-mini` por defecto y un máximo de 1200 tokens de respuesta. Si quieres elegir otro modelo, puedes establecer el secreto opcional `OPENAI_MODEL`. Las solicitudes a OpenAI tienen coste sujeto a tu cuenta y límites. Si Cyber responde con un error de configuración, revisa los secretos, el despliegue de la función y el origen permitido en Supabase.
 
 ## Reto diario
 

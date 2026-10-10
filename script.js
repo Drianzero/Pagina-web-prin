@@ -591,6 +591,13 @@ const cyberLauncher = document.querySelector('#reopen-cyber');
 const cyberChatDialog = document.querySelector('#cyber-chat-dialog');
 const cyberChatMessages = document.querySelector('#cyber-chat-messages');
 const cyberChatForm = document.querySelector('#cyber-chat-form');
+const cyberChatInput = document.querySelector('#cyber-chat-input');
+const cyberChatSubmit = cyberChatForm.querySelector('button[type="submit"]');
+const cyberChatNote = document.querySelector('#cyber-chat-note');
+const cyberChatSuggestions = document.querySelectorAll('[data-cyber-prompt]');
+const cyberChatClear = document.querySelector('#clear-cyber-chat');
+let cyberSpeakingButton = null;
+let cyberChallengeActive = false;
 
 let levelStorageAvailable = true;
 let levelStorageMessage = '';
@@ -610,6 +617,8 @@ let dailyStorageMessage = '';
 let projectState;
 let projectStorageAvailable = true;
 let projectStorageMessage = '';
+const cyberConversation = [];
+let cyberReplyPending = false;
 
 function readSavedLessonLevel() {
     try {
@@ -1515,71 +1524,8 @@ function initializeWelcomeRobot() {
     });
 }
 
-function normalizeCyberMessage(message) {
-    return message.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
-
-function getCyberReply(message) {
-    const normalizedMessage = normalizeCyberMessage(message);
-
-    if (normalizedMessage.includes('principiante') || normalizedMessage.includes('intermedio') || normalizedMessage.includes('avanzado')) {
-        const requestedLevel = normalizedMessage.includes('principiante')
-            ? 'beginner'
-            : normalizedMessage.includes('intermedio') ? 'intermediate' : 'advanced';
-        selectLessonLevel(requestedLevel);
-        return { text: `Listo, ya seleccioné el nivel ${requestedLevel === 'beginner' ? 'Principiante' : requestedLevel === 'intermediate' ? 'Intermedio' : 'Avanzado'}. Encontrarás sus cuatro prácticas en la sección Mi ruta.` };
-    }
-
-    if (normalizedMessage.includes('diagnostico') || normalizedMessage.includes('nivel')) {
-        return { text: '¡Vamos a encontrar un buen punto de partida! Abre el diagnóstico de tres preguntas.', action: 'quiz' };
-    }
-
-    if (normalizedMessage.includes('html')) {
-        return { text: 'HTML organiza el contenido de una página: títulos, párrafos, imágenes y botones. Es el mejor lugar para empezar a construir.' };
-    }
-
-    if (normalizedMessage.includes('css') || normalizedMessage.includes('estilo') || normalizedMessage.includes('color')) {
-        return { text: 'CSS controla la apariencia de tu página: colores, tamaños, espacios y distribución. Busca la práctica “Diseña con CSS” en Principiante.' };
-    }
-
-    if (normalizedMessage.includes('javascript') || normalizedMessage.includes('js')) {
-        return { text: 'JavaScript añade lógica e interacción a una página. Puedes comenzar con botones y eventos, y luego practicar funciones, condiciones y bucles.' };
-    }
-
-    if (normalizedMessage.includes('consejo') || normalizedMessage.includes('aprender') || normalizedMessage.includes('empezar') || normalizedMessage.includes('ayuda')) {
-        const tips = {
-            beginner: 'Prueba un cambio pequeño, ejecuta el ejemplo y observa qué ocurrió. Equivocarse es parte de aprender.',
-            intermediate: 'Divide cada reto en pasos y prueba una idea a la vez. Así será más fácil encontrar y corregir errores.',
-            advanced: 'Experimenta modificando el ejemplo y explica con tus palabras por qué funciona. Después intenta resolverlo de otra forma.'
-        };
-        return { text: tips[currentLevel] };
-    }
-
-    if (normalizedMessage.includes('progreso') || normalizedMessage.includes('avance')) {
-        return { text: `Tu curso registra ${progressCount.textContent}. Completa una práctica y su pregunta para avanzar.` };
-    }
-
-    if (normalizedMessage.includes('reto') || normalizedMessage.includes('diario')) {
-        return { text: 'El reto diario tiene cinco preguntas. Puedes abrirlo desde la barra superior y ganar puntos por tus respuestas correctas.', action: 'daily' };
-    }
-
-    if (normalizedMessage.includes('glosario') || normalizedMessage.includes('concepto') || normalizedMessage.includes('definicion')) {
-        return { text: 'En el glosario puedes buscar conceptos de programación y filtrar por tema.', action: 'glossary' };
-    }
-
-    if (normalizedMessage.includes('practica') || normalizedMessage.includes('leccion') || normalizedMessage.includes('ruta')) {
-        return { text: 'Las doce prácticas están organizadas en tres niveles. Te llevo a Mi ruta para que elijas una.', action: 'route' };
-    }
-
-    if (normalizedMessage.includes('proyecto')) {
-        return { text: 'En el Proyecto final construyes un portafolio en cuatro pasos, con editor y vista previa.', action: 'project' };
-    }
-
-    return { text: 'Todavía estoy aprendiendo esa respuesta. Puedo ayudarte con HTML, CSS, JavaScript, consejos, niveles, prácticas, el reto diario o el glosario.' };
-}
-
 function appendCyberMessage(message, sender) {
-    const bubble = document.createElement('p');
+    const bubble = document.createElement('div');
     bubble.className = `cyber-message cyber-message-${sender}`;
     bubble.textContent = message;
     cyberChatMessages.append(bubble);
@@ -1589,31 +1535,383 @@ function appendCyberMessage(message, sender) {
     }
 
     cyberChatMessages.scrollTop = cyberChatMessages.scrollHeight;
+    return bubble;
 }
 
-function handleCyberMessage(message) {
+function stopCyberSpeech() {
+    if (!('speechSynthesis' in window)) {
+        return;
+    }
+    window.speechSynthesis.cancel();
+    if (cyberSpeakingButton) {
+        cyberSpeakingButton.textContent = 'Leer en voz alta';
+        cyberSpeakingButton = null;
+    }
+}
+
+function addCyberReplyActions(bubble, reply) {
+    const actions = document.createElement('div');
+    actions.className = 'cyber-message-actions';
+
+    const copyButton = document.createElement('button');
+    copyButton.className = 'cyber-message-action';
+    copyButton.type = 'button';
+    copyButton.textContent = 'Copiar';
+    copyButton.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(reply);
+            cyberChatNote.textContent = 'Respuesta copiada al portapapeles.';
+        } catch (error) {
+            console.error('No se pudo copiar la respuesta de Cyber:', error);
+            cyberChatNote.textContent = 'No se pudo copiar. Selecciona el texto de la respuesta para copiarlo manualmente.';
+        }
+    });
+    actions.append(copyButton);
+
+    if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
+        const readButton = document.createElement('button');
+        readButton.className = 'cyber-message-action';
+        readButton.type = 'button';
+        readButton.textContent = 'Leer en voz alta';
+        readButton.addEventListener('click', () => {
+            if (cyberSpeakingButton === readButton || window.speechSynthesis.speaking) {
+                stopCyberSpeech();
+                return;
+            }
+
+            stopCyberSpeech();
+            const utterance = new SpeechSynthesisUtterance(reply);
+            utterance.lang = 'es';
+            cyberSpeakingButton = readButton;
+            readButton.textContent = 'Detener lectura';
+            utterance.onstart = () => {
+                readButton.textContent = 'Detener lectura';
+            };
+            utterance.onend = () => {
+                readButton.textContent = 'Leer en voz alta';
+                if (cyberSpeakingButton === readButton) {
+                    cyberSpeakingButton = null;
+                }
+            };
+            utterance.onerror = (event) => {
+                readButton.textContent = 'Leer en voz alta';
+                if (cyberSpeakingButton === readButton) {
+                    cyberSpeakingButton = null;
+                }
+                if (event.error !== 'canceled' && event.error !== 'interrupted') {
+                    cyberChatNote.textContent = 'El navegador no pudo leer esta respuesta en voz alta.';
+                }
+            };
+            window.speechSynthesis.speak(utterance);
+        });
+        actions.append(readButton);
+    }
+
+    bubble.append(actions);
+}
+
+function clearCyberConversation() {
+    if (cyberReplyPending) {
+        return;
+    }
+    stopCyberSpeech();
+    cyberConversation.length = 0;
+    cyberChallengeActive = false;
+    cyberChatMessages.replaceChildren();
+    appendCyberMessage('¡Conversación limpia! Pregúntame sobre código, pide un reto o pega algo que quieras entender.', 'bot');
+    updateCyberServiceStatus();
+}
+
+function normalizeCyberMessage(message) {
+    return message.toLocaleLowerCase('es')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[¿?¡!.,]/g, '')
+        .trim();
+}
+
+function updateCyberServiceStatus() {
+    cyberChatNote.textContent = supabaseClient
+        ? 'Ctrl + Enter para enviar. Tus preguntas se envían a OpenAI; evita compartir datos privados. Cyber puede equivocarse.'
+        : 'Modo local: comandos, definiciones y reto interactivo disponibles. Para preguntas abiertas, configura Supabase según README.md.';
+}
+
+function getCyberOfflineAnswer(message) {
+    const normalizedMessage = normalizeCyberMessage(message);
+    const mentions = (...terms) => terms.some((term) => normalizedMessage.includes(term));
+    const containsWord = (...terms) => terms.some((term) => new RegExp(`\\b${term}\\b`).test(normalizedMessage));
+    const asksForExplanation = /^(?:que|cual|como|por que|explica|explicame|define|para que|dime|ayuda)/.test(normalizedMessage);
+
+    if (/^(?:hola|buenas|buenos dias|buenas tardes|buenas noches)(?: cyber)?$/.test(normalizedMessage)) {
+        return '¡Hola! Puedo responder preguntas básicas de programación sin conexión. Pregúntame por HTML, CSS, JavaScript, Python, Java, Git, variables, funciones, arrays o bucles; también podemos hacer un reto.';
+    }
+    if (/^(?:gracias|muchas gracias)$/.test(normalizedMessage)) {
+        return '¡De nada! Sigue practicando y, si quieres, escribe “reto JavaScript” para resolver un ejercicio.';
+    }
+    if (mentions('consejo', 'aprender a programar', 'como empiezo')) {
+        return 'Un buen consejo: practica en pasos pequeños. Cambia una cosa del ejemplo, ejecútala y observa el resultado. Empieza con HTML para la estructura, CSS para el diseño y JavaScript para la interacción.';
+    }
+    if (mentions('html') && mentions('css') && mentions('javascript', 'js')) {
+        return 'Son tres piezas que trabajan juntas: HTML organiza el contenido, CSS define su apariencia y JavaScript añade comportamiento e interactividad. Piensa en estructura, diseño y acciones.';
+    }
+    if (mentions('html') && mentions('css')) {
+        return 'HTML organiza el contenido de la página (títulos, párrafos e imágenes); CSS cambia su apariencia (colores, tamaños y distribución). HTML es la estructura y CSS el diseño.';
+    }
+    if (mentions('centrar', 'centro', 'alinear', 'flexbox', 'flex')) {
+        return 'Para alinear elementos en una fila, usa Flexbox en el contenedor. justify-content alinea en el eje principal y align-items en el eje cruzado.\n\nEjemplo: .fila { display: flex; justify-content: center; align-items: center; }';
+    }
+    if (mentions('javascript', 'js') && mentions('html')) {
+        return 'HTML crea la estructura y el contenido; JavaScript añade lógica e interactividad, como responder a un clic o actualizar un texto.';
+    }
+    if (mentions('javascript', 'js') && mentions('css')) {
+        return 'CSS cambia cómo se ve la página; JavaScript controla lo que hace, por ejemplo reaccionar al clic de un botón.';
+    }
+    if (mentions('python') && /^(?:(?:que es|que significa|para que sirve|explica|explicame)\s+)?python$/.test(normalizedMessage)) {
+        return 'Python es un lenguaje de programación de propósito general, conocido por una sintaxis legible. Se usa, entre otras cosas, para automatización, análisis de datos y desarrollo web.\n\nEjemplo: print("¡Hola!")';
+    }
+    if (mentions('html') && mentions('boton')) {
+        return 'Crea un botón en HTML con la etiqueta button. El texto va entre las etiquetas de apertura y cierre.\n\nEjemplo: <button>Haz clic</button>';
+    }
+    if (mentions('html') && (asksForExplanation || normalizedMessage === 'html')) {
+        return 'HTML define la estructura y el contenido de una página mediante elementos, como títulos, párrafos, enlaces e imágenes.\n\nEjemplo: <h1>Mi página</h1>';
+    }
+    if (mentions('css') && mentions('color')) {
+        return 'Puedes cambiar el color con una regla CSS. El selector p apunta a los párrafos y color define el color del texto.\n\nEjemplo: p { color: blue; }';
+    }
+    if (mentions('css') && (asksForExplanation || normalizedMessage === 'css')) {
+        return 'CSS controla la apariencia de una página: colores, tipografía, tamaños y distribución. Se aplica a elementos HTML mediante reglas.\n\nEjemplo: p { color: blue; }';
+    }
+    const asksAboutSpecificCode = mentions('variable', 'const', 'let', 'function', 'funcion', 'array', 'arreglo', 'lista', 'bucle', 'ciclo', 'loop', 'condicion', 'console.log', 'evento', 'click', 'boton')
+        || containsWord('if');
+    if (mentions('javascript', 'js') && (asksForExplanation || normalizedMessage === 'javascript' || normalizedMessage === 'js') && !asksAboutSpecificCode) {
+        return 'JavaScript permite añadir lógica e interactividad a una página, por ejemplo responder a clics, validar formularios o actualizar contenido.\n\nEjemplo: console.log("¡Hola!");';
+    }
+    if (mentions('variable', 'const', 'let')) {
+        if (mentions('python')) {
+            return 'En Python, asignas un valor a una variable usando =. El tipo se deduce del valor y puedes reasignarla después.\n\nEjemplo: nombre = "Ana"\npuntos = 0';
+        }
+        return 'Una variable guarda un valor que puedes usar en tu programa. En JavaScript usa const si no vas a reasignarlo y let si el valor cambiará.\n\nEjemplo: const nombre = "Ana";\nlet puntos = 0;';
+    }
+    if (containsWord('funcion', 'function')) {
+        if (mentions('python')) {
+            return 'En Python, define una función con def, escribe sus parámetros entre paréntesis y usa sangría para su cuerpo. return devuelve un resultado.\n\nEjemplo:\ndef sumar(a, b):\n    return a + b';
+        }
+        return 'Una función agrupa instrucciones que puedes ejecutar cuando las necesites. Puede recibir datos (parámetros) y devolver un resultado.\n\nEjemplo: function sumar(a, b) { return a + b; }';
+    }
+    if (mentions('array', 'arreglo', 'lista')) {
+        if (mentions('python')) {
+            return 'Una lista de Python guarda varios valores ordenados. Sus posiciones empiezan por el índice 0.\n\nEjemplo: frutas = ["pera", "uva"]\nfrutas[0] devuelve "pera".';
+        }
+        return 'Un array (arreglo) guarda varios valores en un orden. En JavaScript, las posiciones empiezan por el índice 0.\n\nEjemplo: const frutas = ["pera", "uva"];\nfrutas[0] devuelve "pera".';
+    }
+    if (mentions('bucle', 'ciclo', 'loop') || containsWord('for')) {
+        if (mentions('python')) {
+            return 'Un bucle for de Python recorre elementos de una secuencia. La sangría marca las instrucciones que se repiten.\n\nEjemplo:\nfor fruta in ["pera", "uva"]:\n    print(fruta)';
+        }
+        return 'Un bucle repite instrucciones. Un for es útil cuando sabes cuántas veces quieres repetir una acción.\n\nEjemplo: for (let i = 0; i < 3; i++) { console.log(i); }';
+    }
+    if (mentions('condicion', 'condicional') || containsWord('if')) {
+        if (mentions('python')) {
+            return 'Una condición permite ejecutar código solo cuando algo es verdadero. En Python se usa if y dos puntos; la sangría marca el bloque.\n\nEjemplo:\nif puntos > 0:\n    print("¡Bien!")';
+        }
+        return 'Una condición permite ejecutar código solo cuando algo es verdadero. En JavaScript se usa if y, opcionalmente, else para el caso contrario.\n\nEjemplo: if (puntos > 0) { console.log("¡Bien!"); }';
+    }
+    if (mentions('python') && mentions('print', 'imprimir')) {
+        return 'print(...) muestra texto o valores en la salida de Python.\n\nEjemplo: print("Hola")';
+    }
+    if (mentions('console.log', 'consolelog', 'consola')) {
+        return 'console.log(...) escribe un valor en la consola del navegador, algo útil para probar el código y revisar datos mientras aprendes.\n\nEjemplo: console.log(2 + 3); // muestra 5';
+    }
+    if (mentions('error', 'undefined', 'no funciona')) {
+        return 'Para encontrar un error, lee el primer mensaje de la consola, revisa la línea indicada y comprueba nombres, paréntesis, llaves y comillas. Si me compartes el mensaje exacto y el código, podré ayudarte mejor cuando la IA esté conectada.';
+    }
+    if (containsWord('java') && asksForExplanation) {
+        return 'Java es un lenguaje de programación de propósito general y tipado estático. Se usa en aplicaciones de servidor, Android y otros sistemas.\n\nEjemplo: System.out.println("¡Hola!");';
+    }
+    if (mentions('git') && asksForExplanation) {
+        return 'Git es una herramienta de control de versiones: guarda el historial de cambios de un proyecto y permite comparar o recuperar versiones. GitHub es un servicio para alojar y compartir repositorios Git.';
+    }
+    return null;
+}
+
+function getCyberChallengeReply(message) {
+    const normalizedMessage = normalizeCyberMessage(message);
+    if (/^(?:salir|cancelar|terminar)(?: del)?(?: reto)?$/.test(normalizedMessage)) {
+        cyberChallengeActive = false;
+        return 'Reto cancelado. Cuando quieras, escribe “reto JavaScript” para intentarlo de nuevo.';
+    }
+    if (/^(?:pista|ayuda)$/.test(normalizedMessage)) {
+        return 'Recuerda que las multiplicaciones se resuelven antes que las sumas. Aún puedes responder A, B o C.';
+    }
+
+    const answer = normalizedMessage.match(/^(?:opcion )?([abc])$|^(10|8|7)$/);
+    if (answer && (answer[1]?.toLowerCase() === 'b' || answer[2] === '8')) {
+        cyberChallengeActive = false;
+        return '¡Correcto! La respuesta es 8: primero 3 × 2 = 6 y después 2 + 6 = 8. Es la prioridad de operadores.';
+    }
+    if (answer) {
+        return 'No exactamente. Recuerda resolver primero la multiplicación. Prueba otra vez con A, B o C; también puedes pedirme una pista.';
+    }
+    return 'Sigo esperando tu respuesta al reto. Elige A, B o C, pide una pista o escribe “cancelar reto”.';
+}
+
+function getCyberLocalAction(message) {
+    const normalizedMessage = normalizeCyberMessage(message);
+
+    if (cyberChallengeActive) {
+        return getCyberChallengeReply(message);
+    }
+
+    if (/^(?:reto|reto de javascript|reto javascript|dame un reto|dame un pequeno reto de javascript y espera mi respuesta antes de darme la solucion)$/.test(normalizedMessage)) {
+        cyberChallengeActive = true;
+        return '¡Vamos con un reto! ¿Qué muestra este código?\n\nconsole.log(2 + 3 * 2);\n\nA) 10    B) 8    C) 7\n\nResponde A, B o C. Si necesitas ayuda, escribe “pista”.';
+    }
+    const levelCommand = normalizedMessage.match(/^(?:selecciona|cambia(?:me)? a|ponme en|quiero el nivel|nivel)\s+(principiante|intermedio|avanzado)$/);
+
+    if (levelCommand) {
+        const level = {
+            principiante: 'beginner',
+            intermedio: 'intermediate',
+            avanzado: 'advanced'
+        }[levelCommand[1]];
+        selectLessonLevel(level);
+        return `Listo, ya seleccioné el nivel ${levelCommand[1]}. Encontrarás sus cuatro prácticas en Mi ruta.`;
+    }
+
+    if (/^(?:ayudame a elegir un nivel|descubrir mi nivel|abre el diagnostico)$/.test(normalizedMessage)) {
+        cyberChatDialog.close();
+        welcomeRobot.hidden = true;
+        levelQuizDialog.showModal();
+        return 'Abro el diagnóstico para recomendarte un nivel.';
+    }
+
+    if (/^(?:que puedes hacer|como me ayudas|ayuda)$/.test(normalizedMessage)) {
+        return supabaseClient
+            ? 'Puedo explicar conceptos y fragmentos de código, proponer retos, sugerirte prácticas y niveles, y llevarte al proyecto, al reto diario o al glosario. También puedes copiar o escuchar mis respuestas.'
+            : 'Sin conexión con OpenAI puedo explicar conceptos básicos de HTML, CSS, JavaScript, Python, Java, Git y lógica, proponerte un reto corto, cambiar tu nivel y llevarte a las secciones del curso. Para revisar cualquier fragmento de código o responder preguntas abiertas, configura Supabase.';
+    }
+
+    const sectionCommand = normalizedMessage.match(/^(?:abre|llevame a|ir a|vamos a)\s+(?:mi\s+)?(ruta|practicas|proyecto|reto|glosario)$/);
+    if (sectionCommand) {
+        const destinations = {
+            ruta: '#ruta',
+            practicas: '#ruta',
+            proyecto: '#proyecto-final',
+            reto: '#reto-diario',
+            glosario: '#glosario'
+        };
+        cyberChatDialog.close();
+        document.querySelector(destinations[sectionCommand[1]]).scrollIntoView({ behavior: 'smooth' });
+        return `Te llevo a ${sectionCommand[1]}.`;
+    }
+
+    return null;
+}
+
+function getCyberErrorMessage(error) {
+    const status = error?.context?.status;
+    if (status === 429) {
+        return 'Cyber recibió muchas preguntas en poco tiempo. Espera un minuto e inténtalo de nuevo.';
+    } else if (status === 401 || status === 403) {
+        return 'Supabase rechazó la solicitud. Revisa que la URL y la clave pública sean correctas y que el origen de esta página esté permitido.';
+    } else if (status === 404) {
+        return 'No se encontró la función de Cyber. Despliega “cyber-chat” en Supabase siguiendo README.md.';
+    } else if (status === 502) {
+        return 'Cyber no pudo obtener respuesta de OpenAI. Revisa la clave, el modelo y los límites de tu cuenta.';
+    } else if (status === 503) {
+        return 'El servicio de Cyber no está listo. Revisa la clave de OpenAI y ejecuta el esquema SQL indicado en README.md.';
+    } else if (status === 400 || status === 413) {
+        return 'El mensaje es demasiado largo o no se pudo procesar. Prueba con una pregunta más breve.';
+    }
+    return 'Cyber no pudo conectar con el servicio de respuestas. Comprueba tu conexión e inténtalo de nuevo.';
+}
+
+async function requestCyberReply() {
+    if (!supabaseClient) {
+        throw new Error('Para activar las respuestas de Cyber, configura Supabase siguiendo los pasos de README.md.');
+    }
+
+    const messages = [];
+    let totalLength = 0;
+    for (const message of cyberConversation.slice(-10).reverse()) {
+        if (totalLength + message.content.length > 16000) {
+            break;
+        }
+        messages.unshift(message);
+        totalLength += message.content.length;
+    }
+
+    const { data, error } = await supabaseClient.functions.invoke('cyber-chat', {
+        body: { messages }
+    });
+
+    if (error) {
+        console.error('No se pudo obtener una respuesta de Cyber:', error);
+        throw error;
+    }
+    if (typeof data?.reply !== 'string' || !data.reply.trim()) {
+        throw new Error('Cyber recibió una respuesta vacía. Inténtalo de nuevo.');
+    }
+
+    return data.reply.trim();
+}
+
+async function handleCyberMessage(message) {
     const cleanMessage = message.trim();
-    if (!cleanMessage) {
+    if (!cleanMessage || cyberReplyPending) {
         return;
     }
 
     appendCyberMessage(cleanMessage, 'user');
-    const reply = getCyberReply(cleanMessage);
-    appendCyberMessage(reply.text, 'bot');
+    const localReply = getCyberLocalAction(cleanMessage);
+    if (localReply) {
+        addCyberReplyActions(appendCyberMessage(localReply, 'bot'), localReply);
+        return;
+    }
 
-    if (reply.action === 'quiz') {
-        cyberChatDialog.close();
-        welcomeRobot.hidden = true;
-        levelQuizDialog.showModal();
-    } else if (reply.action) {
-        const destinations = {
-            daily: '#reto-diario',
-            glossary: '#glosario',
-            route: '#ruta',
-            project: '#proyecto-final'
-        };
-        cyberChatDialog.close();
-        document.querySelector(destinations[reply.action]).scrollIntoView({ behavior: 'smooth' });
+    if (!supabaseClient) {
+        const offlineReply = getCyberOfflineAnswer(cleanMessage);
+        const reply = offlineReply ?? 'Todavía no tengo una respuesta local para eso. Puedo resolver dudas básicas de HTML, CSS, JavaScript, Python, Java, Git y lógica; para preguntas abiertas configura la conexión con OpenAI en Supabase (pasos en README.md).';
+        addCyberReplyActions(appendCyberMessage(reply, 'bot'), reply);
+        return;
+    }
+
+    cyberConversation.push({ role: 'user', content: cleanMessage });
+    const pendingMessage = appendCyberMessage('Cyber está preparando una respuesta...', 'bot');
+    pendingMessage.setAttribute('role', 'status');
+    cyberReplyPending = true;
+    cyberChatMessages.setAttribute('aria-busy', 'true');
+    cyberChatInput.disabled = true;
+    cyberChatSubmit.disabled = true;
+    cyberChatClear.disabled = true;
+    cyberChatSuggestions.forEach((button) => {
+        button.disabled = true;
+    });
+    cyberChatNote.textContent = 'Consultando el asistente de programación…';
+
+    try {
+        const reply = await requestCyberReply();
+        pendingMessage.textContent = reply;
+        pendingMessage.removeAttribute('role');
+        addCyberReplyActions(pendingMessage, reply);
+        cyberConversation.push({ role: 'assistant', content: reply });
+        cyberChatNote.textContent = 'Cyber puede equivocarse. Verifica las respuestas importantes antes de usarlas.';
+    } catch (error) {
+        pendingMessage.remove();
+        const messageText = error instanceof Error && error.message.startsWith('Para activar')
+            ? error.message
+            : getCyberErrorMessage(error);
+        appendCyberMessage(messageText, 'bot');
+        cyberChatNote.textContent = 'Si el problema continúa, revisa la configuración de Cyber descrita en README.md.';
+    } finally {
+        cyberReplyPending = false;
+        cyberChatMessages.removeAttribute('aria-busy');
+        cyberChatInput.disabled = false;
+        cyberChatSubmit.disabled = false;
+        cyberChatClear.disabled = false;
+        cyberChatSuggestions.forEach((button) => {
+            button.disabled = false;
+        });
     }
 }
 
@@ -1631,10 +1929,14 @@ function initializeCyberChat() {
     });
 
     document.querySelector('#close-cyber-chat').addEventListener('click', () => {
+        stopCyberSpeech();
         cyberChatDialog.close();
     });
 
+    cyberChatClear.addEventListener('click', clearCyberConversation);
+
     cyberChatDialog.addEventListener('close', () => {
+        stopCyberSpeech();
         if (!levelQuizDialog.open) {
             welcomeRobot.hidden = false;
         }
@@ -1642,22 +1944,28 @@ function initializeCyberChat() {
 
     cyberChatForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        const input = document.querySelector('#cyber-chat-input');
-        handleCyberMessage(input.value);
-        input.value = '';
+        const message = cyberChatInput.value;
+        cyberChatInput.value = '';
+        handleCyberMessage(message);
         if (cyberChatDialog.open) {
-            input.focus();
+            cyberChatInput.focus();
         }
     });
 
-    document.querySelectorAll('[data-cyber-prompt]').forEach((button) => {
+    cyberChatInput.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
+            cyberChatForm.requestSubmit();
+        }
+    });
+
+    cyberChatSuggestions.forEach((button) => {
         button.addEventListener('click', () => {
             handleCyberMessage(button.dataset.cyberPrompt);
-            if (cyberChatDialog.open) {
-                document.querySelector('#cyber-chat-input').focus();
-            }
         });
     });
+
+    updateCyberServiceStatus();
 }
 
 function runCode() {
@@ -1915,12 +2223,27 @@ form.addEventListener('submit', async (event) => {
 function initializeSupabase() {
     const config = window.SUPABASE_CONFIG;
 
-    if (!window.supabase?.createClient || !config?.url || !config?.anonKey) {
+    if (!window.supabase?.createClient) {
+        console.error('No se cargó la biblioteca de Supabase desde el CDN.');
+        accountButton.title = 'No se pudo cargar Supabase. Comprueba tu conexión a internet.';
+        return;
+    }
+    if (!config?.url || !config?.anonKey) {
         accountButton.title = 'Completa la configuración de Supabase para guardar el progreso.';
         return;
     }
 
-    supabaseClient = window.supabase.createClient(config.url, config.anonKey);
+    try {
+        const projectUrl = new URL(config.url);
+        if (!['https:', 'http:'].includes(projectUrl.protocol) || !config.anonKey.trim()) {
+            throw new Error('La URL o la clave pública de Supabase no tiene un formato válido.');
+        }
+        supabaseClient = window.supabase.createClient(projectUrl.href.replace(/\/$/, ''), config.anonKey.trim());
+    } catch (error) {
+        console.error('La configuración de Supabase no es válida:', error);
+        accountButton.title = 'Revisa la URL y la clave pública de Supabase en supabase-config.js.';
+        return;
+    }
 
     supabaseClient.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_OUT') {
@@ -1981,5 +2304,6 @@ initializeDailyGame();
 initializeGuidedProject();
 initializeGlossary();
 initializeSupabase();
+updateCyberServiceStatus();
 initializeMovementEffects();
 initializeCodeBackdrop();

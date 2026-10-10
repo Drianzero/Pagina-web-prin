@@ -9,10 +9,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=cyber-chat">
+    <link rel="stylesheet" href="styles.css?v=cyber-offline-v2">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
-    <script src="script.js?v=cyber-chat" defer></script>
+    <script src="script.js?v=cyber-offline-v2" defer></script>
 </head>
 <body>
     <div class="scroll-progress" id="scroll-progress" role="progressbar" aria-label="Progreso de lectura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
@@ -296,8 +296,9 @@
             </div>
             <div>
                 <h2 id="cyber-chat-title">Cyber</h2>
-                <p>Tu guía de programación</p>
+                <p>Tu compañero para aprender código</p>
             </div>
+            <button class="cyber-chat-clear" id="clear-cyber-chat" type="button" aria-label="Limpiar conversación">Limpiar</button>
             <button class="dialog-close" id="close-cyber-chat" type="button" aria-label="Cerrar chat">×</button>
         </header>
         <div class="cyber-chat-messages" id="cyber-chat-messages" role="log" aria-live="polite" aria-relevant="additions">
@@ -307,13 +308,15 @@
             <button type="button" data-cyber-prompt="Dame un consejo para aprender">Dame un consejo</button>
             <button type="button" data-cyber-prompt="¿Qué es HTML?">¿Qué es HTML?</button>
             <button type="button" data-cyber-prompt="Ayúdame a elegir un nivel">Ayúdame con mi nivel</button>
+            <button type="button" data-cyber-prompt="Dame un pequeño reto de JavaScript y espera mi respuesta antes de darme la solución.">Reto JavaScript</button>
+            <button type="button" data-cyber-prompt="¿Qué es una variable?">Variables y ejemplos</button>
         </div>
         <form class="cyber-chat-form" id="cyber-chat-form">
             <label class="visually-hidden" for="cyber-chat-input">Escribe tu mensaje para Cyber</label>
-            <input id="cyber-chat-input" name="message" type="text" maxlength="240" placeholder="Escribe una pregunta..." autocomplete="off" required>
+            <textarea id="cyber-chat-input" name="message" maxlength="4000" rows="2" placeholder="Escribe una pregunta o pega un fragmento de código..." autocomplete="off" required></textarea>
             <button class="button button-bright" type="submit" aria-label="Enviar mensaje">Enviar</button>
         </form>
-        <p class="cyber-chat-note">Cyber responde con una guía local; tus mensajes no se envían a ningún servicio.</p>
+        <p class="cyber-chat-note" id="cyber-chat-note">Comprobando la conexión de Cyber…</p>
     </dialog>
 
     <dialog class="level-quiz-dialog" id="level-quiz-dialog" aria-labelledby="level-quiz-title">

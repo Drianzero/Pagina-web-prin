@@ -1,0 +1,2 @@
+[functions.cyber-chat]
+verify_jwt = false

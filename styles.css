@@ -1979,6 +1979,36 @@ textarea:focus-visible {
     width: 42px;
     height: 38px;
     transform: scale(0.88);
+    animation: cyber-float 3s ease-in-out infinite;
+}
+
+.cyber-chat-header .cyber-chat-clear {
+    margin-left: auto;
+    padding: 7px 9px;
+    border: 1px solid rgb(155 134 255 / 25%);
+    border-radius: 8px;
+    background: rgb(155 134 255 / 7%);
+    color: #d3caff;
+    font-size: 0.68rem;
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.cyber-chat-header .cyber-chat-clear:hover:not(:disabled) {
+    border-color: rgb(211 243 107 / 45%);
+    background: rgb(211 243 107 / 8%);
+    color: var(--lime);
+}
+
+.cyber-chat-header .cyber-chat-clear:disabled {
+    cursor: wait;
+    opacity: 0.55;
+}
+
+.cyber-chat-header .cyber-chat-clear:focus-visible,
+.cyber-message-action:focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 3px;
 }
 
 .cyber-chat-header h2 {
@@ -2021,6 +2051,13 @@ textarea:focus-visible {
     font-size: 0.79rem;
     line-height: 1.5;
     overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    animation: cyber-message-arrive 220ms ease-out both;
+}
+
+.cyber-message-bot {
+    display: grid;
+    gap: 8px;
 }
 
 .cyber-message-user {
@@ -2028,6 +2065,25 @@ textarea:focus-visible {
     border-color: rgb(211 243 107 / 17%);
     border-radius: 13px 13px 4px 13px;
     background: rgb(211 243 107 / 9%);
+}
+
+.cyber-message-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cyber-message-action {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #c3b6ff;
+    font-size: 0.66rem;
+    cursor: pointer;
+}
+
+.cyber-message-action:hover {
+    color: var(--lime);
 }
 
 .cyber-chat-suggestions {
@@ -2062,6 +2118,11 @@ textarea:focus-visible {
     color: var(--lime);
 }
 
+.cyber-chat-suggestions button:disabled {
+    cursor: wait;
+    opacity: 0.55;
+}
+
 .cyber-chat-form {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -2070,19 +2131,23 @@ textarea:focus-visible {
     border-top: 1px solid var(--line);
 }
 
-.cyber-chat-form input {
+.cyber-chat-form input,
+.cyber-chat-form textarea {
     width: 100%;
     min-width: 0;
-    min-height: 42px;
-    padding: 0 12px;
+    min-height: 54px;
+    padding: 10px 12px;
     border: 1px solid var(--line);
     border-radius: 9px;
     background: #17162b;
     color: var(--ink);
+    font: inherit;
     font-size: 0.78rem;
+    resize: vertical;
 }
 
-.cyber-chat-form input:focus-visible {
+.cyber-chat-form input:focus-visible,
+.cyber-chat-form textarea:focus-visible {
     border-color: var(--purple);
     outline: 2px solid rgb(155 134 255 / 45%);
     outline-offset: 2px;
@@ -2323,6 +2388,7 @@ textarea:focus-visible {
     background: var(--lime);
     box-shadow: 0 0 8px rgb(211 243 107 / 70%);
     content: "";
+    animation: cyber-antenna-glow 1.8s ease-in-out infinite;
 }
 
 .robot-eye {
@@ -2341,6 +2407,18 @@ textarea:focus-visible {
 
 .robot-eye-right {
     right: 12px;
+}
+
+.welcome-robot-avatar .robot-eye {
+    animation: cyber-blink 5s ease-in-out infinite;
+}
+
+.welcome-robot-avatar .robot-eye-right {
+    animation-delay: 180ms;
+}
+
+.welcome-robot.is-visible .robot-open-button {
+    animation: cyber-float 3.2s ease-in-out infinite;
 }
 
 .robot-mouth {
@@ -2422,6 +2500,55 @@ textarea:focus-visible {
 .level-quiz-retry:focus-visible {
     outline: 2px solid var(--lime);
     outline-offset: 3px;
+}
+
+@keyframes cyber-float {
+    0%,
+    100% {
+        transform: translateY(0) scale(0.88);
+    }
+
+    50% {
+        transform: translateY(-4px) scale(0.88);
+    }
+}
+
+@keyframes cyber-antenna-glow {
+    0%,
+    100% {
+        opacity: 0.65;
+        box-shadow: 0 0 5px rgb(211 243 107 / 45%);
+    }
+
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 11px rgb(211 243 107 / 95%);
+    }
+}
+
+@keyframes cyber-blink {
+    0%,
+    44%,
+    48%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    46% {
+        transform: scaleY(0.12);
+    }
+}
+
+@keyframes cyber-message-arrive {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes bob {
