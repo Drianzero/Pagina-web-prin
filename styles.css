@@ -935,6 +935,11 @@ textarea:focus-visible {
     color: var(--lime);
 }
 
+.lesson-card.is-in-progress .lesson-number {
+    background: rgb(155 134 255 / 15%);
+    color: #d3caff;
+}
+
 .lesson-card-copy {
     display: grid;
     gap: 3px;
@@ -950,7 +955,52 @@ textarea:focus-visible {
     font-size: 0.72rem;
 }
 
+.lesson-card-progress {
+    display: block;
+    width: 100%;
+    height: 4px;
+    margin-top: 3px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: rgb(255 255 255 / 9%);
+}
+
+.lesson-card-progress-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--purple), var(--lime));
+    transition: width 260ms ease;
+}
+
+.lesson-card.is-complete .lesson-card-progress-fill {
+    background: var(--lime);
+}
+
+.lesson-card-state {
+    font-size: 0.63rem !important;
+    font-weight: 700;
+}
+
+.lesson-card.is-in-progress .lesson-card-state {
+    color: #c3b6ff;
+}
+
+.lesson-card.is-complete .lesson-card-state {
+    color: var(--lime);
+}
+
 .lesson-check {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.lesson-card.is-in-progress .lesson-check {
+    color: #c3b6ff;
+}
+
+.lesson-card.is-complete .lesson-check {
     color: var(--lime);
 }
 

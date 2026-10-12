@@ -1301,9 +1301,20 @@ function renderProgress() {
 
     lessonList.querySelectorAll('.lesson-card').forEach((button) => {
         const lesson = lessons.find((item) => item.id === button.dataset.lesson);
-        const isComplete = completedLessons.includes(lesson.id);
+        const lessonComplete = completedLessons.includes(lesson.id);
+        const quizComplete = completedQuizzes.includes(lesson.id);
+        const completedActivities = Number(lessonComplete) + Number(quizComplete);
+        const isComplete = completedActivities === 2;
+        const isInProgress = completedActivities > 0 && !isComplete;
+        const state = isComplete ? 'Completada' : isInProgress ? 'En curso' : 'Pendiente';
+
         button.classList.toggle('is-complete', isComplete);
-        button.querySelector('.lesson-check').textContent = isComplete ? '✓' : '';
+        button.classList.toggle('is-in-progress', isInProgress);
+        button.dataset.progressState = isComplete ? 'complete' : isInProgress ? 'in-progress' : 'pending';
+        button.setAttribute('aria-label', `${lesson.title}: ${state}, ${completedActivities} de 2 actividades completadas`);
+        button.querySelector('.lesson-card-state').textContent = `${state} · ${completedActivities}/2`;
+        button.querySelector('.lesson-card-progress-fill').style.width = `${completedActivities * 50}%`;
+        button.querySelector('.lesson-check').textContent = isComplete ? '✓' : isInProgress ? '•' : '○';
         button.setAttribute('aria-current', lesson.id === currentLesson.id ? 'step' : 'false');
     });
 
@@ -1404,8 +1415,10 @@ function renderLessonList() {
             <span class="lesson-card-copy">
                 <strong>${lesson.title}</strong>
                 <span>${lesson.number} · 5 min</span>
+                <span class="lesson-card-progress" aria-hidden="true"><span class="lesson-card-progress-fill"></span></span>
+                <span class="lesson-card-state"></span>
             </span>
-            <span class="lesson-check" aria-hidden="true"></span>
+            <span class="lesson-check" aria-hidden="true">○</span>
         </button>
     `).join('');
 
