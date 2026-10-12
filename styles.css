@@ -1,13 +1,13 @@
 :root {
     color-scheme: dark;
-    --background: #17162b;
-    --surface: #201f37;
-    --surface-light: #292741;
-    --ink: #f6f4ff;
-    --muted: #a4a1bc;
-    --purple: #9b86ff;
-    --lime: #d3f36b;
-    --line: rgb(255 255 255 / 10%);
+    --background: #101827;
+    --surface: #192338;
+    --surface-light: #24334b;
+    --ink: #f3f5fa;
+    --muted: #a6b0c3;
+    --purple: #8b7cff;
+    --lime: #52e0c4;
+    --line: rgb(186 205 235 / 12%);
 }
 
 * {
@@ -21,7 +21,11 @@ html {
 
 body {
     margin: 0;
-    background: var(--background);
+    background:
+        radial-gradient(ellipse at 12% 8%, rgb(82 224 196 / 8%), transparent 28rem),
+        radial-gradient(ellipse at 88% 14%, rgb(139 124 255 / 11%), transparent 32rem),
+        var(--background);
+    background-attachment: fixed;
     color: var(--ink);
     font-family: 'DM Sans', sans-serif;
     line-height: 1.6;
@@ -788,6 +792,13 @@ textarea:focus-visible {
     width: min(590px, 100%);
 }
 
+.difficulty-guide {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.68rem;
+    text-align: right;
+}
+
 .level-selector {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -953,6 +964,21 @@ textarea:focus-visible {
 .lesson-card-copy span {
     color: var(--muted);
     font-size: 0.72rem;
+}
+
+.lesson-card-copy .lesson-difficulty {
+    color: var(--lime);
+    font-size: 0.66rem;
+    font-weight: 700;
+}
+
+.lesson-card.difficulty-3 .lesson-difficulty {
+    color: #c3b6ff;
+}
+
+.lesson-card.difficulty-4 .lesson-difficulty,
+.lesson-card.difficulty-5 .lesson-difficulty {
+    color: #ffcf85;
 }
 
 .lesson-card-progress {
@@ -3673,6 +3699,97 @@ h1 span {
     font-size: 0.62rem;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+body {
+    background-color: var(--background);
+}
+
+.code-backdrop-line {
+    color: #b7d4e8;
+}
+
+.code-tone-1 {
+    color: var(--lime);
+}
+
+.code-tone-2 {
+    color: #a99dff;
+}
+
+.site-header {
+    border-color: rgb(186 205 235 / 11%);
+}
+
+.hero-visual {
+    border-color: rgb(139 124 255 / 22%);
+    background:
+        radial-gradient(ellipse at 50% 55%, rgb(139 124 255 / 30%), transparent 55%),
+        radial-gradient(ellipse at 80% 15%, rgb(82 224 196 / 12%), transparent 45%),
+        linear-gradient(140deg, #1c2b43, #132033);
+    box-shadow: 0 26px 70px rgb(4 10 23 / 38%), inset 0 1px rgb(255 255 255 / 6%);
+}
+
+.visual-code {
+    border-color: rgb(139 124 255 / 24%);
+    background: rgb(14 24 39 / 94%);
+}
+
+.progress-strip {
+    border-color: rgb(82 224 196 / 18%);
+    background: linear-gradient(115deg, rgb(25 42 59 / 98%), rgb(23 34 53 / 98%));
+}
+
+.daily-quiz-card,
+.lesson-panel,
+.project-workbench {
+    border-color: rgb(139 124 255 / 20%);
+    background: linear-gradient(135deg, rgb(27 40 61 / 98%), rgb(22 34 52 / 98%));
+}
+
+.daily-quiz-aside {
+    background:
+        radial-gradient(ellipse at 85% 15%, rgb(82 224 196 / 10%), transparent 58%),
+        linear-gradient(155deg, rgb(139 124 255 / 12%), rgb(139 124 255 / 4%));
+}
+
+.lesson-card,
+.glossary-card {
+    border-color: rgb(186 205 235 / 11%);
+    background: linear-gradient(140deg, rgb(29 44 66 / 97%), rgb(23 36 55 / 98%));
+}
+
+.lesson-card:hover,
+.lesson-card[aria-current="step"],
+.glossary-card:hover {
+    border-color: rgb(139 124 255 / 68%);
+    background: linear-gradient(140deg, rgb(45 52 86 / 98%), rgb(27 43 63 / 98%));
+    box-shadow: 0 8px 24px rgb(4 10 23 / 30%), 0 0 24px rgb(139 124 255 / 10%);
+}
+
+.lesson-number {
+    background: #263752;
+    color: #c4d8ee;
+}
+
+.practice-challenge {
+    border-color: rgb(82 224 196 / 25%);
+    background: linear-gradient(120deg, rgb(82 224 196 / 9%), rgb(82 224 196 / 3%));
+}
+
+.project-editor,
+#code-editor {
+    border-color: rgb(139 124 255 / 22%);
+    background: linear-gradient(145deg, #111d30, #0e192a);
+}
+
+.hero-highlight-icon,
+.progress-icon {
+    box-shadow: 0 0 22px rgb(82 224 196 / 10%);
+}
+
+.site-footer {
+    border-color: rgb(186 205 235 / 11%);
 }
 
 @media (max-width: 640px) {

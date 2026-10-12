@@ -68,6 +68,70 @@ const lessons = [
         editor: '<header>\n  <h1>Mi rincón creativo</h1>\n</header>\n<main>\n  <article>\n    <h2>Mi primera publicación</h2>\n    <p>Estoy aprendiendo a organizar una página.</p>\n  </article>\n</main>\n<footer>\n  <p>Creado por mí</p>\n</footer>\n\n<style>\n  body { font-family: sans-serif; margin: 0; color: #282344; }\n  header, footer { padding: 18px; background: #282344; color: white; }\n  main { padding: 20px; }\n  article { padding: 16px; border-radius: 12px; background: #f0edff; }\n</style>'
     },
     {
+        id: 'links-images',
+        level: 'beginner',
+        title: 'Añade enlaces e imágenes',
+        shortTitle: 'Enlaces e imágenes',
+        tag: 'HTML · ENLACES',
+        heading: 'Conecta tu página con el mundo.',
+        description: 'Los enlaces llevan a otras páginas y las imágenes ilustran tus ideas. El texto alternativo ayuda a quienes usan lectores de pantalla.',
+        concept: 'Usa <code>&lt;a href="..."&gt;</code> para enlazar y añade siempre un atributo <code>alt</code> descriptivo a cada imagen.',
+        question: '¿Qué atributo describe una imagen para tecnologías de asistencia?',
+        choices: ['title', 'alt', 'src'],
+        answer: 1,
+        challenge: 'Cambia el texto del enlace y escribe una descripción útil para la imagen.',
+        hint: 'El enlace usa href y la descripción de la imagen va dentro del atributo alt.',
+        editor: '<h1>Mi lugar favorito</h1>\n<p>Descubre este paisaje:</p>\n<img src="https://placehold.co/480x220/eeeaff/5940ca?text=Mi+imagen" alt="Ilustración de un paisaje violeta">\n<p><a href="#contacto">Ir a la sección de contacto</a></p>\n<section id="contacto"><h2>Contacto</h2><p>¡Gracias por visitar!</p></section>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  img { display: block; width: min(100%, 480px); border-radius: 12px; }\n  a { color: #5940ca; }\n</style>'
+    },
+    {
+        id: 'box-model',
+        level: 'beginner',
+        title: 'Descubre el modelo de caja',
+        shortTitle: 'Espaciado CSS',
+        tag: 'CSS · MODELO DE CAJA',
+        heading: 'Controla el espacio de cada elemento.',
+        description: 'Cada elemento tiene contenido, relleno interior, borde y margen exterior. Ajustarlos hace que las páginas sean más claras.',
+        concept: '<code>padding</code> agrega espacio por dentro del borde y <code>margin</code> separa una caja de las demás.',
+        question: '¿Qué propiedad crea espacio dentro del borde de una caja?',
+        choices: ['margin', 'padding', 'outline'],
+        answer: 1,
+        challenge: 'Aumenta el espacio interno y prueba un margen distinto para separar la tarjeta.',
+        hint: 'Modifica padding para el espacio interior y margin para el exterior.',
+        editor: '<article class="tarjeta">\n  <h1>Mi tarjeta</h1>\n  <p>El espacio también ayuda a comunicar.</p>\n</article>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; background: #f0edff; }\n  .tarjeta { max-width: 320px; padding: 24px; margin: 16px auto; border: 3px solid #7258e8; border-radius: 16px; background: white; color: #282344; }\n</style>'
+    },
+    {
+        id: 'lists',
+        level: 'beginner',
+        title: 'Organiza información en listas',
+        shortTitle: 'Listas HTML',
+        tag: 'HTML · LISTAS',
+        heading: 'Agrupa ideas para que se entiendan.',
+        description: 'Las listas ordenadas muestran pasos y las desordenadas agrupan elementos sin un orden específico.',
+        concept: 'Crea una lista con <code>&lt;ul&gt;</code> o <code>&lt;ol&gt;</code> y coloca cada elemento dentro de <code>&lt;li&gt;</code>.',
+        question: '¿Qué etiqueta contiene cada elemento de una lista?',
+        choices: ['<li>', '<item>', '<list>'],
+        answer: 0,
+        challenge: 'Agrega un nuevo paso a la lista y cambia el título de tu plan.',
+        hint: 'Cada nuevo paso debe estar entre etiquetas li dentro del ol.',
+        editor: '<h1>Mi plan para aprender</h1>\n<ol>\n  <li>Practicar HTML</li>\n  <li>Probar estilos CSS</li>\n  <li>Crear una interacción</li>\n</ol>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  li { margin: 10px 0; padding: 10px; border-radius: 8px; background: #eeeaff; }\n</style>'
+    },
+    {
+        id: 'responsive-cards',
+        level: 'beginner',
+        title: 'Adapta una tarjeta a la pantalla',
+        shortTitle: 'Diseño adaptable',
+        tag: 'CSS · DISEÑO ADAPTABLE',
+        heading: 'Haz que tu diseño se vea bien en móvil.',
+        description: 'Una regla media query cambia estilos según el ancho de la pantalla. Así una tarjeta puede ocupar todo el espacio en móviles.',
+        concept: 'Escribe <code>@media (max-width: 600px) { ... }</code> para aplicar estilos cuando la pantalla sea estrecha.',
+        question: '¿Qué regla permite aplicar estilos según el ancho de pantalla?',
+        choices: ['@media', '@screen', '@mobile'],
+        answer: 0,
+        challenge: 'Reduce el ancho de la ventana y ajusta el color o tamaño de la tarjeta en la regla media.',
+        hint: 'La media query ya está al final del estilo; cambia el ancho máximo o el fondo.',
+        editor: '<main class="tarjeta">\n  <h1>Mi sitio adaptable</h1>\n  <p>Prueba a cambiar el ancho de la ventana.</p>\n</main>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  .tarjeta { max-width: 560px; margin: auto; padding: 24px; border-radius: 16px; background: #eeeaff; }\n  @media (max-width: 600px) {\n    .tarjeta { padding: 14px; background: #e1f2ff; }\n  }\n</style>'
+    },
+    {
         id: 'flexbox',
         level: 'intermediate',
         number: '05',
@@ -136,6 +200,70 @@ const lessons = [
         editor: '<h1>¿Qué hago hoy?</h1>\n<p id="consejo"></p>\n<button id="decidir">Pedir consejo</button>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  button { padding: 10px 14px; border: 0; border-radius: 8px; background: #7258e8; color: white; cursor: pointer; }\n</style>\n\n<script>\n  const horasDisponibles = 3;\n  document.querySelector("#decidir").addEventListener("click", () => {\n    if (horasDisponibles >= 2) {\n      document.querySelector("#consejo").textContent = "¡Hay tiempo para practicar!";\n    } else {\n      document.querySelector("#consejo").textContent = "Un pequeño paso también cuenta.";\n    }\n  });\n</script>'
     },
     {
+        id: 'grid',
+        level: 'intermediate',
+        title: 'Diseña una cuadrícula con CSS Grid',
+        shortTitle: 'Cuadrículas CSS',
+        tag: 'CSS · GRID',
+        heading: 'Distribuye contenido en filas y columnas.',
+        description: 'CSS Grid permite crear cuadrículas para galerías y paneles. Define columnas con repeat y adapta su tamaño al espacio disponible.',
+        concept: 'Activa <code>display: grid</code> y crea columnas flexibles con <code>grid-template-columns: repeat(2, 1fr)</code>.',
+        question: '¿Qué propiedad define el número y tamaño de las columnas de una cuadrícula?',
+        choices: ['grid-template-columns', 'justify-items', 'flex-direction'],
+        answer: 0,
+        challenge: 'Cambia la cuadrícula a tres columnas y agrega una tarjeta más.',
+        hint: 'Modifica grid-template-columns dentro de .galeria.',
+        editor: '<h1>Mis temas favoritos</h1>\n<div class="galeria">\n  <article>HTML</article><article>CSS</article><article>JavaScript</article><article>Diseño</article>\n</div>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  .galeria { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }\n  article { padding: 20px; border-radius: 12px; background: #eeeaff; text-align: center; }\n</style>'
+    },
+    {
+        id: 'events',
+        level: 'intermediate',
+        title: 'Responde a eventos del navegador',
+        shortTitle: 'Eventos JavaScript',
+        tag: 'JAVASCRIPT · EVENTOS',
+        heading: 'Reacciona a lo que hace la persona.',
+        description: 'Los eventos permiten responder a clics, escritura y otras acciones. addEventListener conecta una acción con una función.',
+        concept: 'Usa <code>addEventListener("input", ...)</code> para actualizar contenido mientras alguien escribe.',
+        question: '¿Qué evento detecta cambios mientras escribes en un campo?',
+        choices: ['submit', 'input', 'load'],
+        answer: 1,
+        challenge: 'Cambia el texto que se muestra cuando el campo está vacío y prueba varias palabras.',
+        hint: 'La condición comprueba el valor del campo; cambia el mensaje de cada caso.',
+        editor: '<h1>Saludo en vivo</h1>\n<label for="nombre">Escribe tu nombre</label>\n<input id="nombre" placeholder="Tu nombre">\n<p id="mensaje" aria-live="polite">¡Hola, visitante!</p>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  input { padding: 10px; border: 1px solid #aaa; border-radius: 8px; }\n</style>\n\n<script>\n  const campo = document.querySelector("#nombre");\n  campo.addEventListener("input", () => {\n    const nombre = campo.value.trim();\n    document.querySelector("#mensaje").textContent = nombre ? "¡Hola, " + nombre + "!" : "¡Hola, visitante!";\n  });\n</script>'
+    },
+    {
+        id: 'function-return',
+        level: 'intermediate',
+        title: 'Calcula resultados con funciones',
+        shortTitle: 'Funciones y retorno',
+        tag: 'JAVASCRIPT · FUNCIONES',
+        heading: 'Separa la lógica y reutiliza cálculos.',
+        description: 'Una función puede recibir varios datos, calcular un resultado y devolverlo para utilizarlo en otra parte del programa.',
+        concept: 'Declara parámetros en la función y usa <code>return</code> para entregar el resultado.',
+        question: '¿Qué palabra devuelve un valor desde una función?',
+        choices: ['return', 'break', 'echo'],
+        answer: 0,
+        challenge: 'Cambia el objetivo de minutos y verifica que el cálculo y el mensaje sigan coincidiendo.',
+        hint: 'La función recibe minutos por día y días; multiplica esos valores y devuelve el total.',
+        editor: '<h1>Mi tiempo de práctica</h1>\n<p id="resultado"></p>\n<button id="calcular">Calcular mi semana</button>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  button { padding: 10px 14px; border: 0; border-radius: 8px; background: #7258e8; color: white; cursor: pointer; }\n</style>\n\n<script>\n  function minutosPorSemana(minutosAlDia, dias) {\n    return minutosAlDia * dias;\n  }\n  document.querySelector("#calcular").addEventListener("click", () => {\n    const total = minutosPorSemana(20, 5);\n    document.querySelector("#resultado").textContent = "¡Practicarás " + total + " minutos esta semana!";\n  });\n</script>'
+    },
+    {
+        id: 'array-methods',
+        level: 'intermediate',
+        title: 'Transforma listas de datos',
+        shortTitle: 'Métodos de arreglos',
+        tag: 'JAVASCRIPT · ARREGLOS',
+        heading: 'Filtra datos con menos pasos.',
+        description: 'Los métodos map y filter crean nuevas listas a partir de arreglos existentes, sin modificar la lista original.',
+        concept: '<code>filter()</code> conserva los elementos que cumplen una condición; <code>map()</code> transforma cada elemento.',
+        question: '¿Qué método crea una lista solo con los elementos que cumplen una condición?',
+        choices: ['filter()', 'push()', 'join()'],
+        answer: 0,
+        challenge: 'Agrega otro puntaje y cambia el mínimo que deben alcanzar para aparecer.',
+        hint: 'Cambia el valor de 70 en filter para ajustar el puntaje mínimo.',
+        editor: '<h1>Puntajes destacados</h1>\n<ul id="lista"></ul>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  li { margin: 6px 0; }\n</style>\n\n<script>\n  const puntajes = [55, 82, 67, 94, 73];\n  const aprobados = puntajes.filter((puntaje) => puntaje >= 70);\n  document.querySelector("#lista").innerHTML = aprobados\n    .map((puntaje) => "<li>" + puntaje + " puntos</li>")\n    .join("");\n</script>'
+    },
+    {
         id: 'functions',
         level: 'advanced',
         number: '09',
@@ -202,8 +330,84 @@ const lessons = [
         challenge: 'Haz clic en el botón para alternar el tema. Cambia los colores en el editor y vuelve a probarlo.',
         hint: 'El ejemplo busca la tarjeta y cambia su clase entre tema-claro y tema-oscuro.',
         editor: '<main id="tarjeta" class="tema-claro">\n  <h1>Mi espacio de estudio</h1>\n  <p id="mensaje">Este es mi tema claro.</p>\n  <button id="cambiar">Cambiar tema</button>\n</main>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; }\n  #tarjeta { padding: 20px; border-radius: 14px; transition: 250ms; }\n  .tema-claro { background: #eeeaff; color: #282344; }\n  .tema-oscuro { background: #282344; color: white; }\n  button { padding: 10px 14px; border: 0; border-radius: 8px; background: #7258e8; color: white; cursor: pointer; }\n</style>\n\n<script>\n  document.querySelector("#cambiar").addEventListener("click", () => {\n    const tarjeta = document.querySelector("#tarjeta");\n    tarjeta.classList.toggle("tema-oscuro");\n    tarjeta.classList.toggle("tema-claro");\n    document.querySelector("#mensaje").textContent = tarjeta.classList.contains("tema-oscuro")\n      ? "¡Activaste el tema oscuro!"\n      : "Este es mi tema claro.";\n  });\n</script>'
+    },
+    {
+        id: 'objects',
+        level: 'advanced',
+        title: 'Modela información con objetos',
+        shortTitle: 'Objetos JavaScript',
+        tag: 'JAVASCRIPT · OBJETOS',
+        heading: 'Agrupa los datos que pertenecen juntos.',
+        description: 'Los objetos relacionan propiedades y valores. Son útiles para representar elementos como perfiles, productos o tareas.',
+        concept: 'Accede a una propiedad con <code>objeto.propiedad</code> y recorre sus datos para mostrarlos.',
+        question: '¿Cómo se suele acceder a la propiedad nombre de un objeto usuario?',
+        choices: ['usuario.nombre', 'usuario->nombre', 'nombre(usuario)'],
+        answer: 0,
+        challenge: 'Añade una propiedad al perfil y muéstrala en la tarjeta.',
+        hint: 'Agrega una propiedad dentro de perfil y otra línea que la escriba en la página.',
+        editor: '<h1>Mi perfil</h1>\n<article id="perfil"></article>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  article { padding: 18px; border-radius: 12px; background: #eeeaff; }\n</style>\n\n<script>\n  const perfil = { nombre: "Alex", lenguaje: "JavaScript", proyectos: 3 };\n  document.querySelector("#perfil").innerHTML =\n    "<h2>" + perfil.nombre + "</h2><p>Aprende " + perfil.lenguaje + "</p><p>Proyectos: " + perfil.proyectos + "</p>";\n</script>'
+    },
+    {
+        id: 'async-await',
+        level: 'advanced',
+        title: 'Coordina tareas asíncronas',
+        shortTitle: 'Async y await',
+        tag: 'JAVASCRIPT · ASINCRONÍA',
+        heading: 'Espera resultados sin bloquear la página.',
+        description: 'Las funciones async y await ayudan a escribir operaciones que tardan un poco, como pedir datos, con un flujo fácil de seguir.',
+        concept: 'Declara una función con <code>async</code> y espera un resultado con <code>await</code>.',
+        question: '¿Qué palabra permite esperar un resultado dentro de una función async?',
+        choices: ['await', 'defer', 'pause'],
+        answer: 0,
+        challenge: 'Cambia el mensaje o el tiempo de espera y vuelve a pulsar el botón.',
+        hint: 'await espera a que la promesa del temporizador se resuelva antes de actualizar el mensaje.',
+        editor: '<h1>Mensaje con demora</h1>\n<button id="cargar">Mostrar mensaje</button>\n<p id="mensaje" aria-live="polite">Pulsa el botón para empezar.</p>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  button { padding: 10px 14px; border: 0; border-radius: 8px; background: #7258e8; color: white; cursor: pointer; }\n</style>\n\n<script>\n  async function cargarMensaje() {\n    const mensaje = document.querySelector("#mensaje");\n    mensaje.textContent = "Cargando...";\n    await new Promise((resolve) => setTimeout(resolve, 800));\n    mensaje.textContent = "¡La espera terminó!";\n  }\n  document.querySelector("#cargar").addEventListener("click", cargarMensaje);\n</script>'
+    },
+    {
+        id: 'event-delegation',
+        level: 'advanced',
+        title: 'Gestiona eventos en una lista',
+        shortTitle: 'Delegación de eventos',
+        tag: 'JAVASCRIPT · EVENTOS',
+        heading: 'Atiende muchos botones con un solo evento.',
+        description: 'La delegación escucha eventos en un contenedor y usa el elemento que los originó. Funciona muy bien con listas que cambian.',
+        concept: 'Escucha el clic en el contenedor y consulta <code>event.target</code> para saber qué elemento se pulsó.',
+        question: '¿Qué propiedad identifica el elemento que originó un evento?',
+        choices: ['event.target', 'event.parent', 'event.valueOf'],
+        answer: 0,
+        challenge: 'Agrega otra tarea y haz clic en ella para alternar su estado.',
+        hint: 'El contenedor escucha los clics y el elemento pulsado cambia la clase completada.',
+        editor: '<h1>Mis tareas</h1>\n<ul id="tareas">\n  <li><button type="button">Practicar HTML</button></li>\n  <li><button type="button">Repasar CSS</button></li>\n  <li><button type="button">Probar JavaScript</button></li>\n</ul>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n  li { margin: 8px 0; }\n  button { padding: 10px; border: 0; border-radius: 8px; background: #eeeaff; cursor: pointer; }\n  button.completada { background: #d3f36b; text-decoration: line-through; }\n</style>\n\n<script>\n  document.querySelector("#tareas").addEventListener("click", (event) => {\n    if (event.target.matches("button")) {\n      event.target.classList.toggle("completada");\n    }\n  });\n</script>'
+    },
+    {
+        id: 'debugging',
+        level: 'advanced',
+        title: 'Encuentra y corrige errores',
+        shortTitle: 'Depuración',
+        tag: 'JAVASCRIPT · DEPURACIÓN',
+        heading: 'Investiga los resultados inesperados.',
+        description: 'Depurar es comprobar los datos y seguir los pasos del programa hasta descubrir un error. console.log ayuda a observar valores.',
+        concept: 'Registra valores intermedios con <code>console.log()</code> y verifica que cada operación produce lo esperado.',
+        question: '¿Qué herramienta sencilla muestra valores para ayudarte a depurar?',
+        choices: ['console.log()', 'document.hide()', 'style.debug()'],
+        answer: 0,
+        challenge: 'Cambia los precios y el descuento, inspecciona los resultados y verifica el total.',
+        hint: 'Muestra subtotal y descuento en la consola antes de calcular el total.',
+        editor: '<h1>Calculadora de compra</h1>\n<p id="total"></p>\n\n<style>\n  body { font-family: sans-serif; padding: 20px; color: #282344; }\n</style>\n\n<script>\n  const precios = [12, 8, 5];\n  const subtotal = precios.reduce((suma, precio) => suma + precio, 0);\n  const descuento = 5;\n  const total = subtotal - descuento;\n  console.log({ precios, subtotal, descuento, total });\n  document.querySelector("#total").textContent = "Total: $" + total;\n</script>'
     }
 ];
+
+const difficultyByLevel = {
+    beginner: [1, 1, 1, 1, 1, 2, 2, 2],
+    intermediate: [2, 2, 2, 2, 3, 3, 3, 3],
+    advanced: [3, 3, 3, 4, 4, 4, 5, 5]
+};
+const levelProgress = { beginner: 0, intermediate: 0, advanced: 0 };
+lessons.forEach((lesson, index) => {
+    lesson.number = String(index + 1).padStart(2, '0');
+    lesson.difficulty = difficultyByLevel[lesson.level][levelProgress[lesson.level]];
+    levelProgress[lesson.level] += 1;
+});
 
 const dailyQuizQuestions = [
     {
@@ -1311,7 +1515,7 @@ function renderProgress() {
         button.classList.toggle('is-complete', isComplete);
         button.classList.toggle('is-in-progress', isInProgress);
         button.dataset.progressState = isComplete ? 'complete' : isInProgress ? 'in-progress' : 'pending';
-        button.setAttribute('aria-label', `${lesson.title}: ${state}, ${completedActivities} de 2 actividades completadas`);
+        button.setAttribute('aria-label', `${lesson.title}: dificultad ${lesson.difficulty} de 5, ${state}, ${completedActivities} de 2 actividades completadas`);
         button.querySelector('.lesson-card-state').textContent = `${state} · ${completedActivities}/2`;
         button.querySelector('.lesson-card-progress-fill').style.width = `${completedActivities * 50}%`;
         button.querySelector('.lesson-check').textContent = isComplete ? '✓' : isInProgress ? '•' : '○';
@@ -1410,11 +1614,12 @@ function renderLesson(feedback = '') {
 function renderLessonList() {
     const levelLessons = lessons.filter((lesson) => lesson.level === currentLevel);
     lessonList.innerHTML = levelLessons.map((lesson) => `
-        <button class="lesson-card" type="button" data-lesson="${lesson.id}" aria-current="false">
+        <button class="lesson-card difficulty-${lesson.difficulty}" type="button" data-lesson="${lesson.id}" aria-current="false">
             <span class="lesson-number">${lesson.number}</span>
             <span class="lesson-card-copy">
                 <strong>${lesson.title}</strong>
                 <span>${lesson.number} · 5 min</span>
+                <span class="lesson-difficulty">Dificultad ${lesson.difficulty}/5 · ${lesson.difficulty <= 2 ? 'Inicial' : lesson.difficulty <= 3 ? 'Media' : 'Alta'}</span>
                 <span class="lesson-card-progress" aria-hidden="true"><span class="lesson-card-progress-fill"></span></span>
                 <span class="lesson-card-state"></span>
             </span>
